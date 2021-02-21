@@ -41,7 +41,7 @@ public class Window {
 
         // Center window
         GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(window, (vidMode.width() - width) / 2, (vidMode.height() - height) / 2); 
+        glfwSetWindowPos(window, (vidMode.width() - width) / 2, (vidMode.height() - height) / 2);
 
         // Make current OpenGL context
         glfwMakeContextCurrent(window);
