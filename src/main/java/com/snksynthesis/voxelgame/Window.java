@@ -11,11 +11,13 @@ public class Window {
     private long window;
     private String title;
     private int width, height;
+    private boolean resized;
 
     public Window(String title, int width, int height) {
         this.title = title;
         this.width = width;
         this.height = height;
+        resized = false;
     }
 
     /**
@@ -38,6 +40,12 @@ public class Window {
         if (window == MemoryUtil.NULL) {
             throw new RuntimeException("Failed to create window!");
         }
+
+        glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
+            this.width = width;
+            this.height = height;
+            resized = true;
+        });
 
         // Center window
         GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -62,6 +70,18 @@ public class Window {
 
     public boolean shouldClose() {
         return glfwWindowShouldClose(window);
+    }
+
+    /**
+     * @return Whether window is resized or not
+     */
+    public boolean isResized() {
+        if (resized) {
+            resized = false;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

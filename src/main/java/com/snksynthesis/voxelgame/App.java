@@ -17,6 +17,10 @@ public class App {
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             window.update();
+            if (window.isResized()) {
+                // Updates relative normalized device coordinates (0-1)
+                glViewport(0, 0, window.getWidth(), window.getHeight());
+            }
         }
     }
 
