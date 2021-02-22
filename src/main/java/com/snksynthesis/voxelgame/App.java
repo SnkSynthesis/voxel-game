@@ -1,11 +1,7 @@
 package com.snksynthesis.voxelgame;
 
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryUtil;
-
 import static org.lwjgl.opengl.GL33.*;
-
-import java.nio.FloatBuffer;
 
 public class App {
 
@@ -32,15 +28,15 @@ public class App {
             0.5f, -0.5f, 0.0f,      1.0f, 0.5f, 0.0f,
         };
         // @formatter:on  
-        
+
         Mesh mesh = new Mesh(vertices);
-        
+
         glClearColor(0.57647f, 0.81961f, 0.92941f, 1.0f);
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             shader.bind();
-            mesh.draw();            
+            mesh.draw();
             shader.unbind();
 
             window.update();

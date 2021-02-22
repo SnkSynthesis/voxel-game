@@ -8,7 +8,7 @@ import static org.lwjgl.opengl.GL33.*;
 public class Mesh {
 
     private int vaoId;
-    private int vboId; 
+    private int vboId;
 
     public Mesh(float[] vertices) {
         FloatBuffer verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
@@ -31,7 +31,7 @@ public class Mesh {
         glBindVertexArray(0);
 
         // Free MemoryUtil
-        MemoryUtil.memFree(verticesBuffer);   
+        MemoryUtil.memFree(verticesBuffer);
     }
 
     public void draw() {
