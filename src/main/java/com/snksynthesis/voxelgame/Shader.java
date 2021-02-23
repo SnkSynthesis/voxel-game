@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 /**
- * Handles shaders
+ * {@link Shader} handles shaders
  */
 public class Shader {
 
@@ -95,5 +95,9 @@ public class Shader {
         }
 
         return sb.toString();
+    }
+
+    public int getProgramId() {
+        return programId;
     }
 }

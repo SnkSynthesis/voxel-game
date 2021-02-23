@@ -5,11 +5,17 @@ import java.nio.FloatBuffer;
 import org.lwjgl.system.MemoryUtil;
 import static org.lwjgl.opengl.GL33.*;
 
+/**
+ * {@link Mesh} is for initializing and drawing meshes
+ */
 public class Mesh {
 
     private int vaoId;
     private int vboId;
 
+    /**
+     * @param vertices must be in format <pre> {posX, posY, posZ, texCoordX, texCoordY, ...} </pre>
+     */
     public Mesh(float[] vertices) {
         FloatBuffer verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
         verticesBuffer.put(vertices).flip();
@@ -21,10 +27,10 @@ public class Mesh {
         glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
         int positionSize = 3;
-        int colorSize = 3;
-        int vertexSizeBytes = (positionSize + colorSize) * Float.BYTES;
+        int textureSize = 2;
+        int vertexSizeBytes = (positionSize + textureSize) * Float.BYTES;
         glVertexAttribPointer(0, positionSize, GL_FLOAT, false, vertexSizeBytes, 0);
-        glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionSize * Float.BYTES);
+        glVertexAttribPointer(1, textureSize, GL_FLOAT, false, vertexSizeBytes, positionSize * Float.BYTES);
 
         // Unbind VBO and VAO
         glBindBuffer(GL_ARRAY_BUFFER, 0);

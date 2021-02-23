@@ -6,6 +6,9 @@ import org.lwjgl.glfw.GLFWVidMode;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.system.MemoryUtil;
 
+/**
+ * {@link Window} is for creating and managing a window.
+ */
 public class Window {
 
     private long window;
