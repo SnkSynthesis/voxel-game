@@ -1,7 +1,12 @@
 package com.snksynthesis.voxelgame;
 
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.MemoryStack;
+
 import static org.lwjgl.opengl.GL33.*;
+
+import org.joml.Matrix4f;
+
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 public class App {
@@ -36,7 +41,9 @@ public class App {
         float deltaTime = 0f;
         float lastFrame = 0f;
 
-        glClearColor(0.57647f, 0.81961f, 0.92941f, 1.0f);
+        float inc = 0f;
+
+        glClearColor(0.1607843137254902f, 0.6235294117647059f, 1.0f, 1.0f);
         while (!window.shouldClose()) {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -44,9 +51,20 @@ public class App {
             float currentFrame = (float) glfwGetTime();
             deltaTime = currentFrame - lastFrame;
             lastFrame = currentFrame;
-            deltaTime = deltaTime + 0; // TEMPORARY
 
+            inc += 2.0f * deltaTime;
+
+            
             shader.bind();
+
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                Matrix4f transform = new Matrix4f();
+                transform.rotateZ(inc);
+                transform.scale((float) Math.sin(inc), (float) Math.sin(inc), (float) Math.sin(inc));
+                int transformLoc = glGetUniformLocation(shader.getProgramId(), "transform");
+                glUniformMatrix4fv(transformLoc, false, transform.get(stack.mallocFloat(16)));
+            }
+
             tex.bind();
             mesh.draw();
             tex.unbind();
