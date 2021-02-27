@@ -17,6 +17,7 @@ public class Mesh {
      * @param vertices must be in format <pre> {posX, posY, posZ, texCoordX, texCoordY, ...} </pre>
      */
     public Mesh(float[] vertices) {
+
         FloatBuffer verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
         verticesBuffer.put(vertices).flip();
 
@@ -47,7 +48,7 @@ public class Mesh {
         glEnableVertexAttribArray(1);
 
         // Draw
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // Unbind
         glDisableVertexAttribArray(0);

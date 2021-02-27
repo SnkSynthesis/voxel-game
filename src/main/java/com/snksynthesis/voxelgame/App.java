@@ -28,12 +28,50 @@ public class App {
 
         // @formatter:off
         float[] vertices = {
-            // Positions            // Texture coords 
-            0.0f,  0.5f, 0.0f,      0.0f, 0.0f,
-           -0.5f, -0.5f, 0.0f,      1.0f, 0.0f,
-            0.5f, -0.5f, 0.0f,      0.5f, 1.0f,
+            // positionX, positionY, positionZ, texCoordX, texCoordY 
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
         };
-        // @formatter:on  
+        // @formatter:on    
 
         Mesh mesh = new Mesh(vertices);
         Texture tex = new Texture("res/textures/soil.png");
@@ -43,6 +81,7 @@ public class App {
 
         float inc = 0f;
 
+        glEnable(GL_DEPTH_TEST);
         glClearColor(0.1607843137254902f, 0.6235294117647059f, 1.0f, 1.0f);
         while (!window.shouldClose()) {
 
@@ -58,11 +97,21 @@ public class App {
             shader.bind();
 
             try (MemoryStack stack = MemoryStack.stackPush()) {
-                Matrix4f transform = new Matrix4f();
-                transform.rotateZ(inc);
-                transform.scale((float) Math.sin(inc), (float) Math.sin(inc), (float) Math.sin(inc));
-                int transformLoc = glGetUniformLocation(shader.getProgramId(), "transform");
-                glUniformMatrix4fv(transformLoc, false, transform.get(stack.mallocFloat(16)));
+
+                Matrix4f model = new Matrix4f();
+                model.rotateXYZ(inc, inc, inc);
+                Matrix4f view = new Matrix4f();
+
+                float aspectRatio = window.getWidth() / window.getHeight();
+                Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(60.0f), aspectRatio, 0.01f, 1000.0f);
+                view.translate(0.0f, 0.0f, -3.0f);
+
+                int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
+                glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
+                int viewLoc = glGetUniformLocation(shader.getProgramId(), "view");
+                glUniformMatrix4fv(viewLoc, false, view.get(stack.mallocFloat(16)));
+                int projectionLoc = glGetUniformLocation(shader.getProgramId(), "projection");
+                glUniformMatrix4fv(projectionLoc, false, projection.get(stack.mallocFloat(16)));
             }
 
             tex.bind();
