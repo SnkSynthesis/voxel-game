@@ -32,6 +32,13 @@ public class Camera {
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_D) == GLFW_PRESS) {
             pos.add(new Vector3f(front).cross(up).normalize().mul(SPEED));
         }
+        if (glfwGetKey(window.getRawWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) {
+            pos.add(new Vector3f(0.0f, 1.0f, 0.0f).mul(SPEED)); // Going up
+        }
+        if (glfwGetKey(window.getRawWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+            pos.add(new Vector3f(0.0f, -1.0f, 0.0f).mul(SPEED)); // Going down
+        }
+
 
         // Toggle cursor mode
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_Q) == GLFW_PRESS) {
@@ -39,6 +46,7 @@ public class Camera {
         }
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS) {
             glfwSetInputMode(window.getRawWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            firstMouse = true;
         }
     }
 
@@ -54,8 +62,9 @@ public class Camera {
         glfwSetCursorPosCallback(window.getRawWindow(), (_window, xpos, ypos) -> {
             if (glfwGetInputMode(window.getRawWindow(), GLFW_CURSOR) == GLFW_CURSOR_DISABLED) {
                 if (firstMouse) {
-                    lastX = (float) xpos;
-                    lastY = (float) ypos;
+                    glfwSetCursorPos(window.getRawWindow(), lastX, lastY);
+                    // lastX = (float) xpos;
+                    // lastY = (float) ypos;
                     firstMouse = false;
                 }
     

@@ -5,14 +5,18 @@ import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.opengl.GL33.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 public class App {
 
     private Window window;
 
     public void run() {
-        window = new Window("Voxel Game", 500, 500);
+        window = new Window("Voxel Game", 800, 600);
         window.create();
 
         GL.createCapabilities();
@@ -71,7 +75,16 @@ public class App {
         };
         // @formatter:on    
 
-        Mesh mesh = new Mesh(vertices);
+        List<Mesh> meshes = new ArrayList<>();
+        List<Vector3f> positions = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                meshes.add(new Mesh(vertices));
+                positions.add(new Vector3f(i, 0.0f, j));
+            }
+        }
+
         Texture tex = new Texture("res/textures/soil.png");
         Camera cam = new Camera();
 
@@ -89,23 +102,31 @@ public class App {
 
             try (MemoryStack stack = MemoryStack.stackPush()) {
 
-                Matrix4f model = new Matrix4f();
-                int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
-                glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
                 
                 Matrix4f view = cam.getViewMat();
                 int viewLoc = glGetUniformLocation(shader.getProgramId(), "view");
                 glUniformMatrix4fv(viewLoc, false, view.get(stack.mallocFloat(16)));
-
+                
                 float aspectRatio = window.getWidth() / window.getHeight();
                 Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(60.0f), aspectRatio, 0.01f, 1000.0f);
                 int projectionLoc = glGetUniformLocation(shader.getProgramId(), "projection");
                 glUniformMatrix4fv(projectionLoc, false, projection.get(stack.mallocFloat(16)));
+
+                for (int i = 0; i < meshes.size(); i++) {
+                    Matrix4f model = new Matrix4f();
+
+                    model.translate(positions.get(i));
+
+                    int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
+                    glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
+                    
+                    tex.bind();
+                    meshes.get(i).draw();
+                    tex.unbind();
+                }
+
             }
 
-            tex.bind();
-            mesh.draw();
-            tex.unbind();
             shader.unbind();
 
             window.update();
@@ -119,7 +140,9 @@ public class App {
             shader.destroy();
         }
 
-        mesh.destroy();
+        for (Mesh mesh : meshes) {
+            mesh.destroy();
+        }
     }
 
     public static void main(String[] args) {
