@@ -15,6 +15,8 @@ public class Window {
     private String title;
     private int width, height;
     private boolean resized;
+    private float deltaTime;
+    private float lastFrame;
 
     public Window(String title, int width, int height) {
         this.title = title;
@@ -64,9 +66,14 @@ public class Window {
     }
 
     /**
-     * Swap buffer and poll events
+     * Swap buffer, poll events, and update delta time
      */
     public void update() {
+
+        float currentFrame = (float) glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
@@ -85,6 +92,10 @@ public class Window {
         } else {
             return false;
         }
+    }
+
+    public float getDeltaTime() {
+        return deltaTime;
     }
 
     /**

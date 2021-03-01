@@ -7,8 +7,6 @@ import static org.lwjgl.opengl.GL33.*;
 
 import org.joml.Matrix4f;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-
 public class App {
 
     private Window window;
@@ -75,11 +73,9 @@ public class App {
 
         Mesh mesh = new Mesh(vertices);
         Texture tex = new Texture("res/textures/soil.png");
+        Camera cam = new Camera();
 
-        float deltaTime = 0f;
-        float lastFrame = 0f;
-
-        float inc = 0f;
+        cam.addMouseCallback(window);
 
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1607843137254902f, 0.6235294117647059f, 1.0f, 1.0f);
@@ -87,29 +83,22 @@ public class App {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            float currentFrame = (float) glfwGetTime();
-            deltaTime = currentFrame - lastFrame;
-            lastFrame = currentFrame;
-
-            inc += 2.0f * deltaTime;
-
+            cam.procInput(window);
             
             shader.bind();
 
             try (MemoryStack stack = MemoryStack.stackPush()) {
 
                 Matrix4f model = new Matrix4f();
-                model.rotateXYZ(inc, inc, inc);
-                Matrix4f view = new Matrix4f();
+                int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
+                glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
+                
+                Matrix4f view = cam.getViewMat();
+                int viewLoc = glGetUniformLocation(shader.getProgramId(), "view");
+                glUniformMatrix4fv(viewLoc, false, view.get(stack.mallocFloat(16)));
 
                 float aspectRatio = window.getWidth() / window.getHeight();
                 Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(60.0f), aspectRatio, 0.01f, 1000.0f);
-                view.translate(0.0f, 0.0f, -3.0f);
-
-                int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
-                glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
-                int viewLoc = glGetUniformLocation(shader.getProgramId(), "view");
-                glUniformMatrix4fv(viewLoc, false, view.get(stack.mallocFloat(16)));
                 int projectionLoc = glGetUniformLocation(shader.getProgramId(), "projection");
                 glUniformMatrix4fv(projectionLoc, false, projection.get(stack.mallocFloat(16)));
             }
