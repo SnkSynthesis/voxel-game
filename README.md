@@ -3,9 +3,9 @@ A simple voxel game written in Java.
 
 * Make sure you have Java 11+ installed though the `pom.xml` file can be configured to support Java 8.
 
-## Run project
+## Compile & run the project
 
-Run `./mvnw exec:java`
+Run `./mvnw compile exec:java`
 
 ### How to play
 
