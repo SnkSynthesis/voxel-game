@@ -1,4 +1,4 @@
-package com.snksynthesis.voxelgame;
+package com.snksynthesis.voxelgame.gfx;
 
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.stb.STBImage.*;
@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 /**
- * {@link Texture} is for loading and using textures 
+ * {@link Texture} is for loading and using textures
  */
 public class Texture {
 
@@ -15,6 +15,7 @@ public class Texture {
 
     /**
      * Loads the texture.
+     * 
      * @throws RuntimeException if the texture wasn't able to be loaded
      */
     public Texture(String path) {

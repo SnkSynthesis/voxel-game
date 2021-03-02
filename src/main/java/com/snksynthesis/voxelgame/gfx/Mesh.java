@@ -1,4 +1,4 @@
-package com.snksynthesis.voxelgame;
+package com.snksynthesis.voxelgame.gfx;
 
 import java.nio.FloatBuffer;
 
@@ -14,7 +14,11 @@ public class Mesh {
     private int vboId;
 
     /**
-     * @param vertices must be in format <pre> {posX, posY, posZ, texCoordX, texCoordY, ...} </pre>
+     * @param vertices must be in format
+     * 
+     *                 <pre>
+     *  {posX, posY, posZ, texCoordX, texCoordY, ...}
+     *                 </pre>
      */
     public Mesh(float[] vertices) {
 

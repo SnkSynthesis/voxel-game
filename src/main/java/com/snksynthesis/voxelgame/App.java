@@ -11,6 +11,8 @@ import java.util.List;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import com.snksynthesis.voxelgame.gfx.*;
+
 public class App {
 
     private Window window;
@@ -73,7 +75,7 @@ public class App {
             -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
             -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
         };
-        // @formatter:on    
+        // @formatter:on
 
         List<Mesh> meshes = new ArrayList<>();
         List<Vector3f> positions = new ArrayList<>();
@@ -97,18 +99,18 @@ public class App {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             cam.procInput(window);
-            
+
             shader.bind();
 
             try (MemoryStack stack = MemoryStack.stackPush()) {
 
-                
                 Matrix4f view = cam.getViewMat();
                 int viewLoc = glGetUniformLocation(shader.getProgramId(), "view");
                 glUniformMatrix4fv(viewLoc, false, view.get(stack.mallocFloat(16)));
-                
+
                 float aspectRatio = window.getWidth() / window.getHeight();
-                Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(60.0f), aspectRatio, 0.01f, 1000.0f);
+                Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(60.0f), aspectRatio, 0.01f,
+                        1000.0f);
                 int projectionLoc = glGetUniformLocation(shader.getProgramId(), "projection");
                 glUniformMatrix4fv(projectionLoc, false, projection.get(stack.mallocFloat(16)));
 
@@ -119,7 +121,7 @@ public class App {
 
                     int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
                     glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
-                    
+
                     tex.bind();
                     meshes.get(i).draw();
                     tex.unbind();

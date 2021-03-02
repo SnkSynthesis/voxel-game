@@ -39,7 +39,6 @@ public class Camera {
             pos.add(new Vector3f(0.0f, -1.0f, 0.0f).mul(SPEED)); // Going down
         }
 
-
         // Toggle cursor mode
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_Q) == GLFW_PRESS) {
             glfwSetInputMode(window.getRawWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -67,26 +66,26 @@ public class Camera {
                     // lastY = (float) ypos;
                     firstMouse = false;
                 }
-    
+
                 float xOffset = (float) (xpos - lastX);
                 float yOffset = (float) (lastY - ypos);
                 lastX = (float) xpos;
                 lastY = (float) ypos;
-    
+
                 final float SENSITIVITY = 0.1f;
-    
+
                 xOffset *= SENSITIVITY;
                 yOffset *= SENSITIVITY;
-    
+
                 yaw += xOffset;
                 pitch += yOffset;
-    
+
                 if (pitch > 89.0f) {
                     pitch = 89.0f;
                 } else if (pitch < -89.0f) {
                     pitch = -89.0f;
                 }
-    
+
                 Vector3f direction = new Vector3f();
                 direction.x = (float) Math.cos(Math.toRadians(yaw)) * (float) Math.cos(Math.toRadians(pitch));
                 direction.y = (float) Math.sin(Math.toRadians(pitch));

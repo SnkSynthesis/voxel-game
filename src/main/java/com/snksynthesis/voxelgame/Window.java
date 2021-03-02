@@ -73,7 +73,7 @@ public class Window {
         float currentFrame = (float) glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        
+
         glfwPollEvents();
         glfwSwapBuffers(window);
     }
