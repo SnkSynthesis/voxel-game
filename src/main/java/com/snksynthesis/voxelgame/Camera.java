@@ -7,17 +7,20 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Camera {
 
-    private Vector3f up, front, pos;
+    private Vector3f front, pos;
     private boolean firstMouse;
     private float lastX, lastY, yaw, pitch;
 
+    private static final Vector3f UP = new Vector3f(0.0f, 1.0f, 0.0f);
+    private static final Vector3f DOWN = new Vector3f(0.0f, -1.0f, 0.0f);
+
     public Camera() {
-        up = new Vector3f(0.0f, 1.0f, 0.0f);
         front = new Vector3f(0.0f, 0.0f, -1.0f);
         pos = new Vector3f(0.0f, 0.0f, 0.0f);
     }
 
     public void procInput(Window window) {
+
         // Keyboard input
         final float SPEED = 5.0f * window.getDeltaTime();
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_W) == GLFW_PRESS) {
@@ -27,16 +30,16 @@ public class Camera {
             pos.sub(new Vector3f(front).mul(SPEED));
         }
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_A) == GLFW_PRESS) {
-            pos.sub(new Vector3f(front).cross(up).normalize().mul(SPEED));
+            pos.sub(new Vector3f(front).cross(Camera.UP).normalize().mul(SPEED));
         }
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_D) == GLFW_PRESS) {
-            pos.add(new Vector3f(front).cross(up).normalize().mul(SPEED));
+            pos.add(new Vector3f(front).cross(Camera.UP).normalize().mul(SPEED));
         }
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_SPACE) == GLFW_PRESS) {
-            pos.add(new Vector3f(0.0f, 1.0f, 0.0f).mul(SPEED)); // Going up
+            pos.add(new Vector3f(Camera.UP).mul(SPEED)); // Going up
         }
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-            pos.add(new Vector3f(0.0f, -1.0f, 0.0f).mul(SPEED)); // Going down
+            pos.add(new Vector3f(Camera.DOWN).mul(SPEED)); // Going down
         }
 
         // Toggle cursor mode
@@ -96,6 +99,6 @@ public class Camera {
     }
 
     public Matrix4f getViewMat() {
-        return new Matrix4f().lookAt(pos, new Vector3f(pos).add(front), up);
+        return new Matrix4f().lookAt(pos, new Vector3f(pos).add(front), Camera.UP);
     }
 }
