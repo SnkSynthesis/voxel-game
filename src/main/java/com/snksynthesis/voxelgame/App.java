@@ -16,119 +16,93 @@ import com.snksynthesis.voxelgame.gfx.*;
 public class App {
 
     private Window window;
+    private Texture tex;
+    private Camera cam;
+    private Shader shader;
+    private List<Mesh> meshes;
+    private List<Vector3f> positions;
 
-    public void run() {
+    private void draw(MemoryStack stack) {
+        Matrix4f view = cam.getViewMat();
+        int viewLoc = glGetUniformLocation(shader.getProgramId(), "view");
+        glUniformMatrix4fv(viewLoc, false, view.get(stack.mallocFloat(16)));
+
+        float aspectRatio = window.getWidth() / window.getHeight();
+        Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(60.0f), aspectRatio, 0.01f,
+                1000.0f);
+        int projectionLoc = glGetUniformLocation(shader.getProgramId(), "projection");
+        glUniformMatrix4fv(projectionLoc, false, projection.get(stack.mallocFloat(16)));
+
+        for (int i = 0; i < meshes.size(); i++) {
+            Matrix4f model = new Matrix4f();
+            model.translate(positions.get(i));
+
+            int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
+            glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
+
+            tex.bind();
+            meshes.get(i).draw();
+            tex.unbind();
+        }
+    }
+
+    private void init() {
         window = new Window("Voxel Game", 800, 600);
         window.create();
 
         GL.createCapabilities();
 
-        Shader shader = new Shader();
+        shader = new Shader();
         try {
             shader.link();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // @formatter:off
-        float[] vertices = {
-            // positionX, positionY, positionZ, texCoordX, texCoordY 
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-            0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-            -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-            -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-        };
-        // @formatter:on
-
-        List<Mesh> meshes = new ArrayList<>();
-        List<Vector3f> positions = new ArrayList<>();
+        meshes = new ArrayList<>();
+        positions = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                meshes.add(new Mesh(vertices));
+                meshes.add(new Mesh(Vertices.CUBE_VERTICES));
                 positions.add(new Vector3f(i, 0.0f, j));
             }
         }
 
-        Texture tex = new Texture("res/textures/soil.png");
-        Camera cam = new Camera();
+        tex = new Texture("res/textures/soil.png");
+        cam = new Camera();
 
         cam.addMouseCallback(window);
 
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1607843137254902f, 0.6235294117647059f, 1.0f, 1.0f);
+    }
+
+    private void destroy() {
+        if (shader != null) {
+            shader.destroy();
+        }
+
+        for (Mesh mesh : meshes) {
+            mesh.destroy();
+        }
+    }
+
+    private void update() {
+        cam.procInput(window);
+    }
+
+    private void run() {
+        init();
         while (!window.shouldClose()) {
-
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            cam.procInput(window);
+            
+            update();
 
             shader.bind();
-
             try (MemoryStack stack = MemoryStack.stackPush()) {
-
-                Matrix4f view = cam.getViewMat();
-                int viewLoc = glGetUniformLocation(shader.getProgramId(), "view");
-                glUniformMatrix4fv(viewLoc, false, view.get(stack.mallocFloat(16)));
-
-                float aspectRatio = window.getWidth() / window.getHeight();
-                Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(60.0f), aspectRatio, 0.01f,
-                        1000.0f);
-                int projectionLoc = glGetUniformLocation(shader.getProgramId(), "projection");
-                glUniformMatrix4fv(projectionLoc, false, projection.get(stack.mallocFloat(16)));
-
-                for (int i = 0; i < meshes.size(); i++) {
-                    Matrix4f model = new Matrix4f();
-
-                    model.translate(positions.get(i));
-
-                    int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
-                    glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
-
-                    tex.bind();
-                    meshes.get(i).draw();
-                    tex.unbind();
-                }
-
+                draw(stack);
             }
-
             shader.unbind();
 
             window.update();
@@ -137,14 +111,7 @@ public class App {
                 glViewport(0, 0, window.getWidth(), window.getHeight());
             }
         }
-
-        if (shader != null) {
-            shader.destroy();
-        }
-
-        for (Mesh mesh : meshes) {
-            mesh.destroy();
-        }
+        destroy();
     }
 
     public static void main(String[] args) {
