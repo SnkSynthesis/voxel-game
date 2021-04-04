@@ -36,7 +36,7 @@ public class Texture {
 
         ByteBuffer data = stbi_load(path, width, height, channels, 0);
         if (data != null) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D);
         } else {
             throw new RuntimeException("Couldn't load texture!");

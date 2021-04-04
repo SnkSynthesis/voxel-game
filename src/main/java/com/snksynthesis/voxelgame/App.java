@@ -10,12 +10,13 @@ import java.util.List;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+import com.snksynthesis.voxelgame.block.Block;
+import com.snksynthesis.voxelgame.block.BlockType;
 import com.snksynthesis.voxelgame.gfx.*;
 
 public class App {
 
     private Window window;
-    private Texture tex;
     private Camera cam;
     private Shader shader;
     private List<Block> blocks;
@@ -48,12 +49,27 @@ public class App {
         }
 
         blocks = new ArrayList<>();
-        tex = new Texture("res/textures/soil.png");
 
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                Block block = new Block(tex);
+        long field = 10;
+
+        for (long i = 0; i < field; i++) {
+            for (long j = 0; j < field; j++) {
+                Block block = new Block(BlockType.GRASS);
                 block.setPos(new Vector3f(i, 0.0f, j));
+                blocks.add(block);
+            }
+        }
+        for (long i = 0; i < field; i++) {
+            for (long j = 0; j < field; j++) {
+                Block block = new Block(BlockType.SOIL);
+                block.setPos(new Vector3f(i, -1.0f, j));
+                blocks.add(block);
+            }
+        }
+        for (long i = 0; i < field; i++) {
+            for (long j = 0; j < field; j++) {
+                Block block = new Block(BlockType.STONE);
+                block.setPos(new Vector3f(i, -2.0f, j));
                 blocks.add(block);
             }
         }

@@ -1,4 +1,4 @@
-package com.snksynthesis.voxelgame;
+package com.snksynthesis.voxelgame.block;
 
 import com.snksynthesis.voxelgame.gfx.*;
 
@@ -12,9 +12,21 @@ public class Block {
     private Mesh mesh;
     private Texture tex;
     private Vector3f pos;
+    private BlockType type;
 
-    public Block(Texture tex) {
-        this.tex = tex;
+    public Block(BlockType type) {
+        switch (type) {
+            case GRASS:
+                tex = new Texture("res/textures/grass.png");
+                break;
+            case STONE:
+                tex = new Texture("res/textures/stone.png");
+                break;
+            case SOIL:
+                tex = new Texture("res/textures/soil.png");
+                break;
+        }
+        this.type = type;
         this.pos = new Vector3f();
         this.mesh = new Mesh(Block.CUBE_VERTICES);
     }
@@ -29,10 +41,15 @@ public class Block {
         tex.unbind();
     }
 
+    
     public void destroy() {
         mesh.destroy();
     }
-
+    
+    public BlockType getType() {
+        return type;
+    }
+    
     public void setPos(Vector3f pos) {
         this.pos = pos;
     }
