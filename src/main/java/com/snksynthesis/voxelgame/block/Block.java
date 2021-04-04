@@ -5,14 +5,19 @@ import com.snksynthesis.voxelgame.gfx.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+
 import static org.lwjgl.opengl.GL33.*;
+
+import java.nio.FloatBuffer;
 
 public class Block {
     
     private Mesh mesh;
     private Texture tex;
-    private Vector3f pos;
     private BlockType type;
+    private FloatBuffer allocatedMem;
+    private Matrix4f model;
 
     public Block(BlockType type) {
         switch (type) {
@@ -27,23 +32,22 @@ public class Block {
                 break;
         }
         this.type = type;
-        this.pos = new Vector3f();
+        this.model = new Matrix4f();
         this.mesh = new Mesh(Block.CUBE_VERTICES);
+        allocatedMem = MemoryUtil.memAllocFloat(16);
     }
 
     public void draw(Shader shader, MemoryStack stack) {
-        Matrix4f model = new Matrix4f();
-        model.translate(pos);
         int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
-        glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
+        glUniformMatrix4fv(modelLoc, false, model.get(allocatedMem));
         tex.bind();
         mesh.draw();
         tex.unbind();
     }
-
     
     public void destroy() {
         mesh.destroy();
+        MemoryUtil.memFree(allocatedMem);
     }
     
     public BlockType getType() {
@@ -51,11 +55,11 @@ public class Block {
     }
     
     public void setPos(Vector3f pos) {
-        this.pos = pos;
+        model.translate(pos);
     }
 
-    public Vector3f getPos() {
-        return pos;
+    public Mesh getModel() {
+        return mesh;
     }
 
     // @formatter:off

@@ -23,7 +23,7 @@ public class App {
 
     private void draw(MemoryStack stack) {
         float aspectRatio = window.getWidth() / window.getHeight();
-        Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(80.0f), aspectRatio, 0.1f, 100.0f);
+        Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(100.0f), aspectRatio, 0.1f, 100.0f);
 
         Matrix4f view = cam.getViewMat();
         int viewLoc = glGetUniformLocation(shader.getProgramId(), "view");
@@ -49,33 +49,7 @@ public class App {
         }
 
         blocks = new ArrayList<>();
-
-        long field = 10;
-
-        for (long i = 0; i < field; i++) {
-            for (long j = 0; j < field; j++) {
-                Block block = new Block(BlockType.GRASS);
-                block.setPos(new Vector3f(i, 0.0f, j));
-                blocks.add(block);
-            }
-        }
-        for (long i = 0; i < field; i++) {
-            for (long j = 0; j < field; j++) {
-                Block block = new Block(BlockType.SOIL);
-                block.setPos(new Vector3f(i, -1.0f, j));
-                blocks.add(block);
-            }
-        }
-        for (long i = 0; i < field; i++) {
-            for (long j = 0; j < field; j++) {
-                Block block = new Block(BlockType.STONE);
-                block.setPos(new Vector3f(i, -2.0f, j));
-                blocks.add(block);
-            }
-        }
-
         cam = new Camera();
-
         cam.addMouseCallback(window);
 
         glEnable(GL_DEPTH_TEST);
@@ -98,10 +72,34 @@ public class App {
 
     private void run() {
         init();
+
+        float j = 0;
+        int field = 20;
+
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            
+
             update();
+
+            j++;
+
+            if (j < 60) {
+                for (int i = 0; i < field; i++) {
+                    Block block = new Block(BlockType.GRASS);
+                    block.setPos(new Vector3f(i, 0f, j));
+                    blocks.add(block);
+                }
+                for (int i = 0; i < field; i++) {
+                    Block block = new Block(BlockType.SOIL);
+                    block.setPos(new Vector3f(i, -1f, j));
+                    blocks.add(block);
+                }
+                for (int i = 0; i < field; i++) {
+                    Block block = new Block(BlockType.STONE);
+                    block.setPos(new Vector3f(i, -2f, j));
+                    blocks.add(block);
+                }
+            }
 
             shader.bind();
             try (MemoryStack stack = MemoryStack.stackPush()) {
