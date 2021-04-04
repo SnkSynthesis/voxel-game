@@ -6,6 +6,9 @@ import org.lwjgl.glfw.GLFWVidMode;
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.system.MemoryUtil;
 
+import org.lwjgl.opengl.GL;
+import static org.lwjgl.opengl.GL33.*;
+
 /**
  * {@link Window} is for creating and managing a window.
  */
@@ -46,12 +49,6 @@ public class Window {
             throw new RuntimeException("Failed to create window!");
         }
 
-        glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
-            this.width = width;
-            this.height = height;
-            resized = true;
-        });
-
         // Center window
         GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         glfwSetWindowPos(window, (vidMode.width() - width) / 2, (vidMode.height() - height) / 2);
@@ -63,6 +60,14 @@ public class Window {
         glfwSwapInterval(1);
 
         glfwShowWindow(window);
+
+        GL.createCapabilities();
+
+        glfwSetFramebufferSizeCallback(window, (window, width, height) -> {
+            glViewport(0, 0, width, height);
+            this.width = width;
+            this.height = height;
+        });
     }
 
     /**
