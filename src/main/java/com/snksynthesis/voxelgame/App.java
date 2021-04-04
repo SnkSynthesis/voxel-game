@@ -18,8 +18,7 @@ public class App {
     private Texture tex;
     private Camera cam;
     private Shader shader;
-    private List<Mesh> meshes;
-    private List<Vector3f> positions;
+    private List<Block> blocks;
 
     private void draw(MemoryStack stack) {
         float aspectRatio = window.getWidth() / window.getHeight();
@@ -32,16 +31,8 @@ public class App {
         int projectionLoc = glGetUniformLocation(shader.getProgramId(), "projection");
         glUniformMatrix4fv(projectionLoc, false, projection.get(stack.mallocFloat(16)));
 
-        for (int i = 0; i < meshes.size(); i++) {
-            Matrix4f model = new Matrix4f();
-            model.translate(positions.get(i));
-
-            int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
-            glUniformMatrix4fv(modelLoc, false, model.get(stack.mallocFloat(16)));
-
-            tex.bind();
-            meshes.get(i).draw();
-            tex.unbind();
+        for (int i = 0; i < blocks.size(); i++) {
+            blocks.get(i).draw(shader, stack);
         }
     }
 
@@ -56,17 +47,17 @@ public class App {
             e.printStackTrace();
         }
 
-        meshes = new ArrayList<>();
-        positions = new ArrayList<>();
+        blocks = new ArrayList<>();
+        tex = new Texture("res/textures/soil.png");
 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 5; j++) {
-                meshes.add(new Mesh(Vertices.CUBE_VERTICES));
-                positions.add(new Vector3f(i, 0.0f, j));
+                Block block = new Block(tex);
+                block.setPos(new Vector3f(i, 0.0f, j));
+                blocks.add(block);
             }
         }
 
-        tex = new Texture("res/textures/soil.png");
         cam = new Camera();
 
         cam.addMouseCallback(window);
@@ -80,8 +71,8 @@ public class App {
             shader.destroy();
         }
 
-        for (Mesh mesh : meshes) {
-            mesh.destroy();
+        for (Block block : blocks) {
+            block.destroy();
         }
     }
 
