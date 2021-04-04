@@ -1,4 +1,4 @@
-package com.snksynthesis.voxelgame;
+package com.snksynthesis.voxelgame.gfx;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
