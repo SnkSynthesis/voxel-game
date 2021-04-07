@@ -74,29 +74,33 @@ public class App {
         init();
 
         float j = 0;
-        int field = 20;
+        int field = 50;
+        int scale = 2;
 
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             update();
 
-            j++;
+            j+=2;
 
             if (j < 60) {
-                for (int i = 0; i < field; i++) {
+                for (int i = 0; i < field; i+=2) {
                     Block block = new Block(BlockType.GRASS);
                     block.setPos(new Vector3f(i, 0f, j));
+                    block.getModel().scale(scale, scale, scale);
                     blocks.add(block);
                 }
-                for (int i = 0; i < field; i++) {
+                for (int i = 0; i < field; i+=2) {
                     Block block = new Block(BlockType.SOIL);
-                    block.setPos(new Vector3f(i, -1f, j));
+                    block.setPos(new Vector3f(i, -2f, j));
+                    block.getModel().scale(scale, scale, scale);
                     blocks.add(block);
                 }
-                for (int i = 0; i < field; i++) {
+                for (int i = 0; i < field; i+=2) {
                     Block block = new Block(BlockType.STONE);
-                    block.setPos(new Vector3f(i, -2f, j));
+                    block.setPos(new Vector3f(i, -4f, j));
+                    block.getModel().scale(scale, scale, scale);
                     blocks.add(block);
                 }
             }

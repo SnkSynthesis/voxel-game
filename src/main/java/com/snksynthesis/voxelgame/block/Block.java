@@ -58,8 +58,8 @@ public class Block {
         model.translate(pos);
     }
 
-    public Mesh getModel() {
-        return mesh;
+    public Matrix4f getModel() {
+        return model;
     }
 
     // @formatter:off
