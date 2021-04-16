@@ -82,22 +82,22 @@ public class App {
 
             update();
 
-            j+=2;
+            j+=3;
 
             if (j < 60) {
-                for (int i = 0; i < field; i+=2) {
+                for (int i = 0; i < field; i+=3) {
                     Block block = new Block(BlockType.GRASS);
                     block.setPos(new Vector3f(i, 0f, j));
                     block.getModel().scale(scale, scale, scale);
                     blocks.add(block);
                 }
-                for (int i = 0; i < field; i+=2) {
+                for (int i = 0; i < field; i+=3) {
                     Block block = new Block(BlockType.SOIL);
                     block.setPos(new Vector3f(i, -2f, j));
                     block.getModel().scale(scale, scale, scale);
                     blocks.add(block);
                 }
-                for (int i = 0; i < field; i+=2) {
+                for (int i = 0; i < field; i+=3) {
                     Block block = new Block(BlockType.STONE);
                     block.setPos(new Vector3f(i, -4f, j));
                     block.getModel().scale(scale, scale, scale);
