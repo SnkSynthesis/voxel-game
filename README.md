@@ -1,7 +1,7 @@
 # voxel-game
 A simple voxel game written in Java.
 
-* Make sure you have Java 11+ installed though the `pom.xml` file can be configured to support Java 8.
+* Make sure you have Java 11+ installed.
 
 ## Compile & run the project
 

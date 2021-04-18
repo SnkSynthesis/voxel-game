@@ -37,6 +37,14 @@ public class Block {
         allocatedMem = MemoryUtil.memAllocFloat(16);
     }
 
+    /**
+     * Copy constructor
+     * @param block - Block to be copied
+     */
+    public Block(Block block) {
+        this(block.getType());
+    }
+
     public void draw(Shader shader, MemoryStack stack) {
         int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
         glUniformMatrix4fv(modelLoc, false, model.get(allocatedMem));

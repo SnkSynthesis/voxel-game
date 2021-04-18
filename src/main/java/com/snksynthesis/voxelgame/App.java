@@ -4,14 +4,9 @@ import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.opengl.GL33.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
-import com.snksynthesis.voxelgame.block.Block;
-import com.snksynthesis.voxelgame.block.BlockType;
+import com.snksynthesis.voxelgame.block.BlockManager;
 import com.snksynthesis.voxelgame.gfx.*;
 
 public class App {
@@ -19,7 +14,7 @@ public class App {
     private Window window;
     private Camera cam;
     private Shader shader;
-    private List<Block> blocks;
+    private BlockManager blockManager;
 
     private void draw(MemoryStack stack) {
         float aspectRatio = window.getWidth() / window.getHeight();
@@ -32,9 +27,7 @@ public class App {
         int projectionLoc = glGetUniformLocation(shader.getProgramId(), "projection");
         glUniformMatrix4fv(projectionLoc, false, projection.get(stack.mallocFloat(16)));
 
-        for (int i = 0; i < blocks.size(); i++) {
-            blocks.get(i).draw(shader, stack);
-        }
+        blockManager.draw(shader, stack);
     }
 
     private void init() {
@@ -48,7 +41,6 @@ public class App {
             e.printStackTrace();
         }
 
-        blocks = new ArrayList<>();
         cam = new Camera();
         cam.addMouseCallback(window);
 
@@ -61,9 +53,7 @@ public class App {
             shader.destroy();
         }
 
-        for (Block block : blocks) {
-            block.destroy();
-        }
+        blockManager.destroy();
     }
 
     private void update() {
@@ -73,37 +63,12 @@ public class App {
     private void run() {
         init();
 
-        float j = 0;
-        int field = 50;
-        int scale = 2;
-
         while (!window.shouldClose()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             update();
 
-            j+=3;
-
-            if (j < 60) {
-                for (int i = 0; i < field; i+=3) {
-                    Block block = new Block(BlockType.GRASS);
-                    block.setPos(new Vector3f(i, 0f, j));
-                    block.getModel().scale(scale, scale, scale);
-                    blocks.add(block);
-                }
-                for (int i = 0; i < field; i+=3) {
-                    Block block = new Block(BlockType.SOIL);
-                    block.setPos(new Vector3f(i, -2f, j));
-                    block.getModel().scale(scale, scale, scale);
-                    blocks.add(block);
-                }
-                for (int i = 0; i < field; i+=3) {
-                    Block block = new Block(BlockType.STONE);
-                    block.setPos(new Vector3f(i, -4f, j));
-                    block.getModel().scale(scale, scale, scale);
-                    blocks.add(block);
-                }
-            }
+            
 
             shader.bind();
             try (MemoryStack stack = MemoryStack.stackPush()) {
