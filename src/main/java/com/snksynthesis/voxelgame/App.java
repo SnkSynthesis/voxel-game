@@ -44,8 +44,12 @@ public class App {
         cam = new Camera();
         cam.addMouseCallback(window);
 
+        blockManager = new BlockManager();
+
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1607843137254902f, 0.6235294117647059f, 1.0f, 1.0f);
+
+        
     }
 
     private void destroy() {
@@ -58,6 +62,7 @@ public class App {
 
     private void update() {
         cam.procInput(window);
+        blockManager.genWorld();
     }
 
     private void run() {
@@ -67,8 +72,6 @@ public class App {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             update();
-
-            
 
             shader.bind();
             try (MemoryStack stack = MemoryStack.stackPush()) {
