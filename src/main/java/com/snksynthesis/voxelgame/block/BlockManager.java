@@ -12,8 +12,8 @@ public class BlockManager {
 
     private List<Block> blocks;
 
-    private final int WIDTH = 30;
-    private final int LENGTH = 30;
+    private final int WIDTH = 100;
+    private final int LENGTH = 50;
 
     private float x;
     private float z;
@@ -35,8 +35,15 @@ public class BlockManager {
     }
 
     private void genPillar(float x, float z, float height) {
-        for (float i = 0f; i < height; i++) {
-            var block = new Block(BlockType.GRASS);
+        for (int i = (int) height; i > height - 2; i--) {
+            Block block = null;
+            if (height < 3) {
+                block = new Block(BlockType.STONE);
+            } else if (height < 5) {
+                block = new Block(BlockType.SOIL);
+            } else {
+                block = new Block(BlockType.GRASS);
+            }
             block.getModel().translate(x, i, z);
             blocks.add(block);
         }
@@ -47,7 +54,7 @@ public class BlockManager {
             if (x < LENGTH) {
                 float nx = x / WIDTH + 0.5f;
                 float nz = z / LENGTH + 0.5f;
-                float height = SimplexNoise.noise(nx * 1.77f, nz * 1.77f);
+                float height = SimplexNoise.noise(nx * 2.77f, nz * 2.77f);
                 height += 1;
                 height *= 5;
                 genPillar(x, z, height);
