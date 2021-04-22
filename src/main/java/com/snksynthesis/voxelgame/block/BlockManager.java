@@ -51,7 +51,7 @@ public class BlockManager {
 
     public void genWorld() {
         if (z < WIDTH) {
-            if (x < LENGTH) {
+            while (x < LENGTH) {
                 float nx = x / WIDTH + 0.5f;
                 float nz = z / LENGTH + 0.5f;
                 float height = SimplexNoise.noise(nx * 2.77f, nz * 2.77f);
@@ -59,10 +59,9 @@ public class BlockManager {
                 height *= 5;
                 genPillar(x, z, height);
                 x++;
-            } else {
-                x = 0;
-                z++;
             }
+            x = 0;
+            z++;
         }
     }
 }
