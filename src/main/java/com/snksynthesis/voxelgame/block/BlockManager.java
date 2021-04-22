@@ -13,7 +13,7 @@ public class BlockManager {
     private List<Block> blocks;
 
     private final int WIDTH = 100;
-    private final int LENGTH = 50;
+    private final int LENGTH = 100;
 
     private float x;
     private float z;
