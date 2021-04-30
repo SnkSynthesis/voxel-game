@@ -13,12 +13,7 @@ public class Texture {
 
     private int texture;
 
-    /**
-     * Loads the texture.
-     * 
-     * @throws RuntimeException if the texture wasn't able to be loaded
-     */
-    public Texture(String path) {
+    private Texture(String path, boolean rgba) {
         texture = glGenTextures();
         glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -36,12 +31,35 @@ public class Texture {
 
         ByteBuffer data = stbi_load(path, width, height, channels, 0);
         if (data != null) {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            if (rgba) {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+            } else {
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            }
             glGenerateMipmap(GL_TEXTURE_2D);
         } else {
             throw new RuntimeException("Couldn't load texture!");
         }
         stbi_image_free(data);
+    }
+
+    /**
+     * Loads an RGB image.
+     * 
+     * @throws RuntimeException if the texture wasn't able to be loaded
+     */
+    public static Texture loadRGB(String path) {
+        Texture tex = new Texture(path, false);
+        return tex;
+    }
+
+    /**
+     * Loads an RGBA image
+     * @throws RuntimeException if the texture wasn't able to be loaded
+     */
+    public static Texture loadRGBA(String path) {
+        Texture tex = new Texture(path, true);
+        return tex;
     }
 
     public void bind() {
