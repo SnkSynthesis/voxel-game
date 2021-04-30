@@ -12,8 +12,8 @@ public class BlockManager {
 
     private List<Block> blocks;
 
-    private final int WIDTH = 100;
-    private final int LENGTH = 100;
+    private final int WIDTH = 50;
+    private final int LENGTH = 50;
 
     private float x;
     private float z;
@@ -35,11 +35,23 @@ public class BlockManager {
     }
 
     private void genPillar(float x, float z, float height) {
-        for (int i = (int) height; i > height - 2; i--) {
+        for (int i = 0; i < height; i++) {
             Block block = null;
-            if (height < 3) {
+            if (i < 3) {
                 block = new Block(BlockType.STONE);
-            } else if (height < 5) {
+            } else if (i < 5) {
+                block = new Block(BlockType.SOIL);
+            } else {
+                block = new Block(BlockType.GRASS);
+            }
+            block.getModel().translate(x, i, z);
+            blocks.add(block);
+        }
+        for (int i = 0; i > -height; i--) {
+            Block block = null;
+            if (i < 3) {
+                block = new Block(BlockType.STONE);
+            } else if (i < 5) {
                 block = new Block(BlockType.SOIL);
             } else {
                 block = new Block(BlockType.GRASS);
@@ -54,9 +66,10 @@ public class BlockManager {
             while (x < LENGTH) {
                 float nx = x / WIDTH + 0.5f;
                 float nz = z / LENGTH + 0.5f;
-                float height = SimplexNoise.noise(nx * 2.77f, nz * 2.77f);
-                height += 1;
-                height *= 5;
+                float height = SimplexNoise.noise(nx * 2f, nz * 2f) + 0.25f * SimplexNoise.noise(nx * 3f, nz * 3f)
+                        + 0.5f * SimplexNoise.noise(nx * 4f, nz * 4f);
+                height += 0.1f;
+                height *= 10;
                 genPillar(x, z, height);
                 x++;
             }

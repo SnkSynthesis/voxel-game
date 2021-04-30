@@ -12,7 +12,7 @@ import static org.lwjgl.opengl.GL33.*;
 import java.nio.FloatBuffer;
 
 public class Block {
-    
+
     private Mesh mesh;
     private Texture tex;
     private BlockType type;
@@ -21,24 +21,27 @@ public class Block {
 
     public Block(BlockType type) {
         switch (type) {
-            case GRASS:
-                tex = new Texture("res/textures/grass.png");
-                break;
-            case STONE:
-                tex = new Texture("res/textures/stone.png");
-                break;
-            case SOIL:
-                tex = new Texture("res/textures/soil.png");
-                break;
+        case GRASS:
+            tex = Texture.loadRGBA("res/textures/soil+grass.png");
+            this.mesh = new Mesh(GRASS_CUBE_VERTICES);
+            break;
+        case STONE:
+            tex = Texture.loadRGBA("res/textures/stone.png");
+            this.mesh = new Mesh(CUBE_VERTICES);
+            break;
+        case SOIL:
+            tex = Texture.loadRGBA("res/textures/soil+grass.png");
+            this.mesh = new Mesh(SOIL_CUBE_VERTICES);
+            break;
         }
         this.type = type;
         this.model = new Matrix4f();
-        this.mesh = new Mesh(Block.CUBE_VERTICES);
         allocatedMem = MemoryUtil.memAllocFloat(16);
     }
 
     /**
      * Copy constructor
+     * 
      * @param block - Block to be copied
      */
     public Block(Block block) {
@@ -52,16 +55,16 @@ public class Block {
         mesh.draw();
         tex.unbind();
     }
-    
+
     public void destroy() {
         mesh.destroy();
         MemoryUtil.memFree(allocatedMem);
     }
-    
+
     public BlockType getType() {
         return type;
     }
-    
+
     public void setPos(Vector3f pos) {
         model.translate(pos);
     }
@@ -71,49 +74,143 @@ public class Block {
     }
 
     // @formatter:off
-    protected static final float[] CUBE_VERTICES = {
-        // positionX, positionY, positionZ, texCoordX, texCoordY 
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+    protected final float[] CUBE_VERTICES = {
+        // Positions            Texture Coordinates 
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,    1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,    1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,    0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
 
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,    0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,    0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,    1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,    1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,    1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,    0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f
+    };
+    // @formatter:on
+
+    // @formatter:off
+    protected final float[] GRASS_CUBE_VERTICES = {
+        // Positions            Texture Coordinates 
+        -0.5f, -0.5f, -0.5f,    0.5f, 0.5f,
+         0.5f, -0.5f, -0.5f,    1.0f, 0.5f,
+         0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,    1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,    0.5f, 1.0f,
+        -0.5f, -0.5f, -0.5f,    0.5f, 0.5f,
+
+        -0.5f, -0.5f,  0.5f,    0.5f, 0.5f, 
+         0.5f, -0.5f,  0.5f,    1.0f, 0.5f,
+         0.5f,  0.5f,  0.5f,    1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,    0.5f, 1.0f,
+        -0.5f, -0.5f,  0.5f,    0.5f, 0.5f,
+
+        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,    0.5f, 1.0f,
+        -0.5f, -0.5f, -0.5f,    0.5f, 0.5f,
+        -0.5f, -0.5f, -0.5f,    0.5f, 0.5f,
+        -0.5f, -0.5f,  0.5f,    1.0f, 0.5f,
+        -0.5f,  0.5f,  0.5f,    1.0f, 1.0f,
+
+         0.5f,  0.5f,  0.5f,    1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,    0.5f, 1.0f,
+         0.5f, -0.5f, -0.5f,    0.5f, 0.5f,
+         0.5f, -0.5f, -0.5f,    0.5f, 0.5f,
+         0.5f, -0.5f,  0.5f,    1.0f, 0.5f,
+         0.5f,  0.5f,  0.5f,    1.0f, 1.0f,
+
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.5f,
+         0.5f, -0.5f, -0.5f,    0.5f, 0.5f,
+         0.5f, -0.5f,  0.5f,    0.5f, 0.0f,
+         0.5f, -0.5f,  0.5f,    0.5f, 0.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.5f,
+
+        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,    0.5f, 1.0f,
+         0.5f,  0.5f,  0.5f,    0.5f, 0.5f,
+         0.5f,  0.5f,  0.5f,    0.5f, 0.5f,
+        -0.5f,  0.5f,  0.5f,    0.0f, 0.5f,
+        -0.5f,  0.5f, -0.5f,    0.0f, 1.0f
+    };
+    // @formatter:on
+
+    // @formatter:off
+    protected final float[] SOIL_CUBE_VERTICES = {
+        // Positions            Texture Coordinates 
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,    0.5f, 0.0f,
+         0.5f,  0.5f, -0.5f,    0.5f, 0.5f,
+         0.5f,  0.5f, -0.5f,    0.5f, 0.5f,
+        -0.5f,  0.5f, -0.5f,    0.0f, 0.5f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,    0.5f, 0.0f,
+         0.5f,  0.5f,  0.5f,    0.5f, 0.5f,
+         0.5f,  0.5f,  0.5f,    0.5f, 0.5f,
+        -0.5f,  0.5f,  0.5f,    0.0f, 0.5f,
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+        -0.5f,  0.5f, -0.5f,    0.5f, 0.5f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.5f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.5f,
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+         0.5f,  0.5f, -0.5f,    0.5f, 0.5f,
+         0.5f, -0.5f, -0.5f,    0.0f, 0.5f,
+         0.5f, -0.5f, -0.5f,    0.0f, 0.5f,
+         0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.5f,
+         0.5f, -0.5f, -0.5f,    0.5f, 0.5f,
+         0.5f, -0.5f,  0.5f,    0.5f, 0.0f,
+         0.5f, -0.5f,  0.5f,    0.5f, 0.0f,
+        -0.5f, -0.5f,  0.5f,    0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,    0.0f, 0.5f,
+
+        -0.5f,  0.5f, -0.5f,    0.0f, 0.5f,
+         0.5f,  0.5f, -0.5f,    0.5f, 0.5f,
+         0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+         0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+        -0.5f,  0.5f,  0.5f,    0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,    0.0f, 0.5f
     };
     // @formatter:on
 }

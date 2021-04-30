@@ -10,8 +10,8 @@ import static org.lwjgl.opengl.GL33.*;
  */
 public class Mesh {
 
-    private int vaoId;
-    private int vboId;
+    private int vaoId; // Vertex Array Object ID
+    private int vboId; // Vertex Buffer Object ID
 
     /**
      * @param vertices must be in format
@@ -27,6 +27,8 @@ public class Mesh {
 
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
+
+        // Vertices
         vboId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
@@ -41,8 +43,10 @@ public class Mesh {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
 
-        // Free MemoryUtil
-        MemoryUtil.memFree(verticesBuffer);
+        // Free memory
+        if (verticesBuffer != null) {
+            MemoryUtil.memFree(verticesBuffer);
+        }
     }
 
     public void draw() {
@@ -66,6 +70,6 @@ public class Mesh {
         glDeleteBuffers(vboId);
         // Delete VAO
         glBindVertexArray(0);
-        glDeleteVertexArrays(vboId);
+        glDeleteVertexArrays(vaoId);
     }
 }

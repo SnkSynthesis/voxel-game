@@ -48,8 +48,7 @@ public class App {
 
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1607843137254902f, 0.6235294117647059f, 1.0f, 1.0f);
-
-        
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
     private void destroy() {
