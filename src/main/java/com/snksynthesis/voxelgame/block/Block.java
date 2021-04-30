@@ -22,15 +22,15 @@ public class Block {
     public Block(BlockType type) {
         switch (type) {
         case GRASS:
-            tex = Texture.loadRGBA("res/textures/soil+grass.png");
+            tex = Texture.loadRGBA("res/textures/soil+grass+stone.png");
             this.mesh = new Mesh(GRASS_CUBE_VERTICES);
             break;
         case STONE:
-            tex = Texture.loadRGBA("res/textures/stone.png");
-            this.mesh = new Mesh(CUBE_VERTICES);
+            tex = Texture.loadRGBA("res/textures/soil+grass+stone.png");
+            this.mesh = new Mesh(STONE_CUBE_VERTICES);
             break;
         case SOIL:
-            tex = Texture.loadRGBA("res/textures/soil+grass.png");
+            tex = Texture.loadRGBA("res/textures/soil+grass+stone.png");
             this.mesh = new Mesh(SOIL_CUBE_VERTICES);
             break;
         }
@@ -211,6 +211,53 @@ public class Block {
          0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
         -0.5f,  0.5f,  0.5f,    0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,    0.0f, 0.5f
+    };
+    // @formatter:on
+
+    // @formatter:off
+    protected final float[] STONE_CUBE_VERTICES = {
+        // Positions            Texture Coordinates 
+        -0.5f, -0.5f, -0.5f,    0.5f, 0.0f,
+         0.5f, -0.5f, -0.5f,    1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,    1.0f, 0.5f,
+         0.5f,  0.5f, -0.5f,    1.0f, 0.5f,
+        -0.5f,  0.5f, -0.5f,    0.5f, 0.5f,
+        -0.5f, -0.5f, -0.5f,    0.5f, 0.0f,
+
+        -0.5f, -0.5f,  0.5f,    0.5f, 0.0f,
+         0.5f, -0.5f,  0.5f,    1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 0.5f,
+         0.5f,  0.5f,  0.5f,    1.0f, 0.5f,
+        -0.5f,  0.5f,  0.5f,    0.5f, 0.5f,
+        -0.5f, -0.5f,  0.5f,    0.5f, 0.0f,
+
+        -0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+        -0.5f,  0.5f, -0.5f,    1.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,    1.0f, 0.5f,
+        -0.5f, -0.5f, -0.5f,    1.0f, 0.5f,
+        -0.5f, -0.5f,  0.5f,    0.5f, 0.5f,
+        -0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+
+         0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+         0.5f,  0.5f, -0.5f,    1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,    1.0f, 0.5f,
+         0.5f, -0.5f, -0.5f,    1.0f, 0.5f,
+         0.5f, -0.5f,  0.5f,    0.5f, 0.5f,
+         0.5f,  0.5f,  0.5f,    0.5f, 0.0f,
+
+        -0.5f, -0.5f, -0.5f,    0.5f, 0.0f,
+         0.5f, -0.5f, -0.5f,    1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,    1.0f, 0.5f,
+         0.5f, -0.5f,  0.5f,    1.0f, 0.5f,
+        -0.5f, -0.5f,  0.5f,    0.5f, 0.5f,
+        -0.5f, -0.5f, -0.5f,    0.5f, 0.0f,
+
+        -0.5f,  0.5f, -0.5f,    0.5f, 0.0f,
+         0.5f,  0.5f, -0.5f,    1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,    1.0f, 0.5f,
+         0.5f,  0.5f,  0.5f,    1.0f, 0.5f,
+        -0.5f,  0.5f,  0.5f,    0.5f, 0.5f,
+        -0.5f,  0.5f, -0.5f,    0.5f, 0.0f
     };
     // @formatter:on
 }
