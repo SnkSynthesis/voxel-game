@@ -78,7 +78,7 @@ public class BlockManager {
             while (x < LENGTH) {
                 float nx = x / WIDTH + 0.5f;
                 float nz = z / LENGTH + 0.5f;
-                float height = SimplexNoise.noise(nx * 2.77f, nz * 2.77f);
+                float height = SimplexNoise.noise(nx * 1.77f, nz * 1.77f);
                 height += 0.5f;
                 height *= 10;
                 genPillar(x, z, height);
