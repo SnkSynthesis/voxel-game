@@ -35,30 +35,6 @@ public class BlockManager {
     }
 
     private void genPillar(float x, float z, float height) {
-        // for (int i = 0; i < height; i++) {
-        //     Block block = null;
-        //     if (i < 3) {
-        //         block = new Block(BlockType.STONE);
-        //     } else if (i < 5) {
-        //         block = new Block(BlockType.SOIL);
-        //     } else {
-        //         block = new Block(BlockType.GRASS);
-        //     }
-        //     block.getModel().translate(x, i, z);
-        //     blocks.add(block);
-        // }
-        // for (int i = 0; i > -height; i--) {
-        //     Block block = null;
-        //     if (i < 3) {
-        //         block = new Block(BlockType.STONE);
-        //     } else if (i < 5) {
-        //         block = new Block(BlockType.SOIL);
-        //     } else {
-        //         block = new Block(BlockType.GRASS);
-        //     }
-        //     block.getModel().translate(x, i, z);
-        //     blocks.add(block);
-        // }
         for (int i = (int) height; i > height - 3; i--) {
             Block block = null;
             if (i < 3) {
