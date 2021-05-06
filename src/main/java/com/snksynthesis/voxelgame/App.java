@@ -81,7 +81,7 @@ public class App {
 
         blockManager = new BlockManager();
 
-        lightPos = new Vector3f(5.0f, 5.5f, 5.0f);
+        lightPos = new Vector3f(blockManager.WIDTH / 2, 20.5f, blockManager.LENGTH / 2);
         light = new Block(BlockType.LIGHT);
         light.getModel().translate(lightPos);
 
@@ -99,9 +99,6 @@ public class App {
     private void update() {
         cam.procInput(window);
         blockManager.genWorld();
-        lightPos.add(1.0f * window.getDeltaTime(), 1.0f * window.getDeltaTime(), 1.0f * window.getDeltaTime());
-        light.getModel().identity();
-        light.getModel().translate(lightPos);
     }
 
     private void run() {

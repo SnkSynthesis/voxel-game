@@ -12,8 +12,8 @@ public class BlockManager {
 
     private List<Block> blocks;
 
-    private final int WIDTH = 50;
-    private final int LENGTH = 50;
+    public final int WIDTH = 50;
+    public final int LENGTH = 50;
 
     private float x;
     private float z;
