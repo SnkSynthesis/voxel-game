@@ -7,6 +7,13 @@ import static org.lwjgl.opengl.GL33.*;
 
 /**
  * {@link Mesh} is for initializing and drawing meshes
+ * 
+ * @param vertices must be in format
+ * 
+ *                 <pre>
+ *    {posX, posY, posZ, texCoordX, texCoordY, normalX, normalY, normalZ, ...}
+ *                 </pre>
+ * 
  */
 public class Mesh {
 
@@ -14,17 +21,14 @@ public class Mesh {
     private int vboId; // Vertex Buffer Object ID
 
     /**
-     * @param vertices must be in format
-     * 
-     *                 <pre>
-     *  {posX, posY, posZ, texCoordX, texCoordY, ...}
-     *                 </pre>
+     * Normal constructor
      */
     public Mesh(float[] vertices) {
-
+        // Allocate memory
         FloatBuffer verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
         verticesBuffer.put(vertices).flip();
 
+        // Create VAO
         vaoId = glGenVertexArrays();
         glBindVertexArray(vaoId);
 
@@ -32,12 +36,19 @@ public class Mesh {
         vboId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
-        glEnableVertexAttribArray(0);
         int positionSize = 3;
         int textureSize = 2;
-        int vertexSizeBytes = (positionSize + textureSize) * Float.BYTES;
+        int normalSize = 3;
+        int vertexSizeBytes = (positionSize + textureSize + normalSize) * Float.BYTES;
+        // Positions
         glVertexAttribPointer(0, positionSize, GL_FLOAT, false, vertexSizeBytes, 0);
+        glEnableVertexAttribArray(0);
+        // Texture Coordinates
         glVertexAttribPointer(1, textureSize, GL_FLOAT, false, vertexSizeBytes, positionSize * Float.BYTES);
+        glEnableVertexAttribArray(1);
+        // Normals
+        glVertexAttribPointer(2, normalSize, GL_FLOAT, false, vertexSizeBytes, textureSize * Float.BYTES);
+        glEnableVertexAttribArray(2);
 
         // Unbind VBO and VAO
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -49,18 +60,56 @@ public class Mesh {
         }
     }
 
+    /**
+     * Special constructor for other types of meshes.
+     * @param vertices
+     * @param type     can be "LIGHT_SOURCE"
+     */
+    public Mesh(float[] vertices, String type) {
+        FloatBuffer verticesBuffer;
+        int positionSize;
+        int textureSize;
+        int vertexSizeBytes;
+        switch (type) {
+            case "LIGHT_SOURCE":
+                // Allocate memory
+                verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
+                verticesBuffer.put(vertices).flip();
+
+                // Create VAO
+                vaoId = glGenVertexArrays();
+                glBindVertexArray(vaoId);
+
+                // Vertices
+                vboId = glGenBuffers();
+                glBindBuffer(GL_ARRAY_BUFFER, vboId);
+                glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
+                positionSize = 3;
+                textureSize = 2;
+                vertexSizeBytes = (positionSize + textureSize) * Float.BYTES;
+                // Positions
+                glVertexAttribPointer(0, positionSize, GL_FLOAT, false, vertexSizeBytes, 0);
+                glEnableVertexAttribArray(0);
+                // Texture Coordinates
+                glVertexAttribPointer(1, textureSize, GL_FLOAT, false, vertexSizeBytes, positionSize * Float.BYTES);
+                glEnableVertexAttribArray(1);
+
+                // Free memory
+                if (verticesBuffer != null) {
+                    MemoryUtil.memFree(verticesBuffer);
+                }
+                break;
+        }
+    }
+
     public void draw() {
         // Bind
         glBindVertexArray(vaoId);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
 
         // Draw
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // Unbind
-        glDisableVertexAttribArray(0);
-        glDisableVertexAttribArray(1);
         glBindVertexArray(0);
     }
 

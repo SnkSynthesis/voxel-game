@@ -14,6 +14,18 @@ public class Shader {
     private int programId;
     private int vertexId;
     private int fragId;
+    private String vertexPath;
+    private String fragPath;
+
+    /**
+     * Initializes a Shader object
+     * @param vertexPath path to vertex shader
+     * @param fragPath path to fragment shader
+     */
+    public Shader(String vertexPath, String fragPath) {
+        this.vertexPath = vertexPath;
+        this.fragPath = fragPath;
+    }
 
     /**
      * Link shaders
@@ -28,8 +40,8 @@ public class Shader {
             throw new Exception("Unable to create shader program!");
         }
 
-        vertexId = createShader("res/shaders/vertex.glsl", GL_VERTEX_SHADER);
-        fragId = createShader("res/shaders/fragment.glsl", GL_FRAGMENT_SHADER);
+        vertexId = createShader(vertexPath, GL_VERTEX_SHADER);
+        fragId = createShader(fragPath, GL_FRAGMENT_SHADER);
 
         glLinkProgram(programId);
         if (glGetProgrami(programId, GL_LINK_STATUS) == 0) {
@@ -99,5 +111,9 @@ public class Shader {
 
     public int getProgramId() {
         return programId;
+    }
+
+    public int getLocation(String name) {
+        return glGetUniformLocation(programId, name);
     }
 }
