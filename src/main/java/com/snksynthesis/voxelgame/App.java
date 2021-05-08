@@ -31,7 +31,7 @@ public class App {
         glUniform3f(shader.getLocation("lightColor"), 1.0f, 1.0f, 1.0f);
 
         // Projection Matrix
-        float aspectRatio = window.getWidth() / window.getHeight();
+        float aspectRatio = (float) window.getWidth() / window.getHeight();
         Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(100.0f), aspectRatio, 0.1f, 100.0f);
         glUniformMatrix4fv(shader.getLocation("projection"), false, projection.get(stack.mallocFloat(16)));
 
@@ -81,7 +81,7 @@ public class App {
 
         blockManager = new BlockManager();
 
-        lightPos = new Vector3f(blockManager.WIDTH / 2, 20.5f, blockManager.LENGTH / 2);
+        lightPos = new Vector3f(blockManager.WIDTH / 2f, 20.5f, blockManager.LENGTH / 2f);
         light = new Block(BlockType.LIGHT);
         light.getModel().translate(lightPos);
 
@@ -109,8 +109,11 @@ public class App {
 
             update();
 
-            try (MemoryStack stack = MemoryStack.stackPush()) {
+            MemoryStack stack = MemoryStack.stackPush();
+            try {
                 draw(stack);
+            } finally {
+                stack.close();
             }
 
             window.update();
