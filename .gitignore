@@ -16,3 +16,4 @@ buildNumber.properties
 .settings
 bin
 *.iml
+.idea
