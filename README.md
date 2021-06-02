@@ -7,6 +7,11 @@ A simple voxel game written in Java.
 
 Run `./mvnw compile exec:java`
 
+**OR**
+
+1. Create a JAR: `./mvnw package`
+2. java -jar `./target/voxel-game-1.0.jar`
+
 ### How to play
 
 * WASD - To move around
