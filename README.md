@@ -10,7 +10,7 @@ Run `./mvnw compile exec:java`
 **OR**
 
 1. Create a JAR: `./mvnw package`
-2. java -jar `./target/voxel-game-1.0.jar`
+2. `java -jar ./target/voxel-game-1.0.jar`
 
 ### How to play
 
