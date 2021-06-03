@@ -62,14 +62,14 @@ public class App {
         window = new Window("Voxel Game", 650, 650);
         window.create();
 
-        shader = new Shader("res/shaders/vertex.glsl", "res/shaders/fragment.glsl");
+        shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
         try {
             shader.link();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        lightShader = new Shader("res/shaders/light_vertex.glsl", "res/shaders/light_fragment.glsl");
+        lightShader = new Shader("shaders/light_vertex.glsl", "shaders/light_fragment.glsl");
         try {
             lightShader.link();
         } catch (Exception e) {

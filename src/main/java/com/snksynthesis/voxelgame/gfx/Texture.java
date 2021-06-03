@@ -3,6 +3,7 @@ package com.snksynthesis.voxelgame.gfx;
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.stb.STBImage.*;
 import org.lwjgl.BufferUtils;
+
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -29,7 +30,8 @@ public class Texture {
         // Flips image vertically so that it is not seen upside down
         stbi_set_flip_vertically_on_load(true);
 
-        ByteBuffer data = stbi_load(path, width, height, channels, 0);
+        String texPath = getClass().getClassLoader().getResource(path).getPath().substring(1);
+        ByteBuffer data = stbi_load(texPath, width, height, channels, 0);
         if (data != null) {
             if (rgba) {
                 glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -55,6 +57,7 @@ public class Texture {
 
     /**
      * Loads an RGBA image
+     * 
      * @throws RuntimeException if the texture wasn't able to be loaded
      */
     public static Texture loadRGBA(String path) {

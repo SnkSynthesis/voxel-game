@@ -23,8 +23,8 @@ public class Shader {
      * @param fragPath path to fragment shader
      */
     public Shader(String vertexPath, String fragPath) {
-        this.vertexPath = vertexPath;
-        this.fragPath = fragPath;
+        this.vertexPath = getClass().getClassLoader().getResource(vertexPath).getPath().substring(1);;
+        this.fragPath = getClass().getClassLoader().getResource(fragPath).getPath().substring(1);
     }
 
     /**

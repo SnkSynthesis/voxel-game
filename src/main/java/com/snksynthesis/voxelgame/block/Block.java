@@ -22,19 +22,19 @@ public class Block {
     public Block(BlockType type) {
         switch (type) {
             case GRASS:
-                tex = Texture.loadRGBA("res/textures/soil+grass+stone.png");
+                tex = Texture.loadRGBA("textures/soil+grass+stone.png");
                 this.mesh = new Mesh(GRASS_CUBE_VERTICES);
                 break;
             case STONE:
-                tex = Texture.loadRGBA("res/textures/soil+grass+stone.png");
+                tex = Texture.loadRGBA("textures/soil+grass+stone.png");
                 this.mesh = new Mesh(STONE_CUBE_VERTICES);
                 break;
             case SOIL:
-                tex = Texture.loadRGBA("res/textures/soil+grass+stone.png");
+                tex = Texture.loadRGBA("textures/soil+grass+stone.png");
                 this.mesh = new Mesh(SOIL_CUBE_VERTICES);
                 break;
             case LIGHT:
-                tex = Texture.loadRGBA("res/textures/light.png");
+                tex = Texture.loadRGBA("textures/light.png");
                 this.mesh = new Mesh(LIGHT_CUBE_VERTICES, "LIGHT_SOURCE");
                 break;
         }
