@@ -35,7 +35,7 @@ public class BlockManager {
     }
 
     private void genPillar(float x, float z, float height) {
-        for (var y = (int) height; y > height - 3; y--) {
+        for (int y = (int) height; y > height - 3; y--) {
             Block block = null;
             if (y < 3) {
                 block = new Block(BlockType.STONE);
