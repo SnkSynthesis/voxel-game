@@ -71,8 +71,8 @@ public class Camera {
                     firstMouse = false;
                 }
 
-                float xOffset = (float) (xpos - lastX);
-                float yOffset = (float) (lastY - ypos);
+                var xOffset = (float) (xpos - lastX);
+                var yOffset = (float) (lastY - ypos);
                 lastX = (float) xpos;
                 lastY = (float) ypos;
 
@@ -90,7 +90,7 @@ public class Camera {
                     pitch = -89.0f;
                 }
 
-                Vector3f direction = new Vector3f();
+                var direction = new Vector3f();
                 direction.x = (float) Math.cos(Math.toRadians(yaw)) * (float) Math.cos(Math.toRadians(pitch));
                 direction.y = (float) Math.sin(Math.toRadians(pitch));
                 direction.z = (float) Math.sin(Math.toRadians(yaw)) * (float) Math.cos(Math.toRadians(pitch));
