@@ -33,12 +33,12 @@ public class App {
         glUniform3f(shader.getLocation("lightColor"), 1.0f, 1.0f, 1.0f);
 
         // Projection Matrix
-        float aspectRatio = (float) window.getWidth() / window.getHeight();
-        Matrix4f projection = new Matrix4f().setPerspective((float) Math.toRadians(100.0f), aspectRatio, 0.1f, 100.0f);
+        var aspectRatio = (float) window.getWidth() / window.getHeight();
+        var projection = new Matrix4f().setPerspective((float) Math.toRadians(100.0f), aspectRatio, 0.1f, 100.0f);
         glUniformMatrix4fv(shader.getLocation("projection"), false, projection.get(stack.mallocFloat(16)));
 
         // View Matrix
-        Matrix4f view = cam.getViewMat();
+        var view = cam.getViewMat();
         glUniformMatrix4fv(shader.getLocation("view"), false, view.get(stack.mallocFloat(16)));
 
         blockManager.draw(shader, stack);
