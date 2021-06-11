@@ -3,6 +3,7 @@ package com.snksynthesis.voxelgame;
 import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.glfw.GLFW.*;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -21,6 +22,7 @@ public class App {
     private BlockManager blockManager;
     private Block light;
     private Vector3f lightPos;
+    private boolean toggleWireframe;
 
     private void draw(MemoryStack stack) {
         // Bind shader
@@ -85,9 +87,20 @@ public class App {
         light = new Block(BlockType.LIGHT);
         light.getModel().translate(lightPos);
 
+        toggleWireframe = false;
+        glfwSetKeyCallback(window.getRawWindow(), (window, key, scancode, action, mods) -> {
+            if (key == GLFW_KEY_T && action == GLFW_PRESS) {
+                toggleWireframe = !toggleWireframe;
+                if (toggleWireframe) {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                } else {
+                    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                }
+            }
+        });
+
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1607843137254902f, 0.6235294117647059f, 1.0f, 1.0f);
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
     private void destroy() {

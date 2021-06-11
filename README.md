@@ -14,9 +14,10 @@ Run `./mvnw compile exec:java`
 
 ### How to play
 
-* WASD - To move around
-* Move Mouse - To look around
-* Q - Lock mouse to window
-* ESC - Unlock mouse from window
-* Left Shift - Move down
-* Space - Move up 
+* `[W]`, `[A]`, `[S]`, `[D]` - To move around
+* `[Move Mouse]` - To look around
+* `[Q]` - Lock mouse to window
+* `[ESC]` - Unlock mouse from window
+* `[Left Shift]` - Move down
+* `[Space]` - Move up 
+* `[T]` - Toggle Wireframe
