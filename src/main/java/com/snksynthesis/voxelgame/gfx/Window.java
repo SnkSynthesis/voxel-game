@@ -114,6 +114,11 @@ public class Window {
         return title;
     }
 
+    public void setTitle(String title) {
+        this.title = title;
+        glfwSetWindowTitle(window, title);
+    }
+
     public int getWidth() {
         return width;
     }

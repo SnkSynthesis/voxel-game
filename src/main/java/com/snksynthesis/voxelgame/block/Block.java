@@ -78,7 +78,7 @@ public class Block {
     }
 
     // @formatter:off
-    protected final float[] CUBE_VERTICES = {
+    public final float[] CUBE_VERTICES = {
         // Positions            Texture Coords       Normals
         -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,     0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,    1.0f, 0.0f,     0.0f,  0.0f, -1.0f,
@@ -125,7 +125,7 @@ public class Block {
     // @formatter:on
 
     // @formatter:off
-    protected final float[] GRASS_CUBE_VERTICES = {
+    public static final float[] GRASS_CUBE_VERTICES = {
         // Positions            Texture Coords       Normals 
         -0.5f, -0.5f, -0.5f,    0.5f, 0.5f,     0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,    1.0f, 0.5f,     0.0f,  0.0f, -1.0f,
@@ -172,7 +172,7 @@ public class Block {
     // @formatter:on
 
     // @formatter:off
-    protected final float[] SOIL_CUBE_VERTICES = {
+    public static final float[] SOIL_CUBE_VERTICES = {
         // Positions          Texture Coords          Normals
         -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,     0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,    0.5f, 0.0f,     0.0f,  0.0f, -1.0f,
@@ -219,7 +219,7 @@ public class Block {
     // @formatter:on
 
     // @formatter:off
-    protected final float[] STONE_CUBE_VERTICES = {
+    public static final float[] STONE_CUBE_VERTICES = {
         // Positions            Texture Coords         Normals 
         -0.5f, -0.5f, -0.5f,    0.5f, 0.0f,      0.0f,  0.0f, -1.0f,
          0.5f, -0.5f, -0.5f,    1.0f, 0.0f,      0.0f,  0.0f, -1.0f,
@@ -266,7 +266,7 @@ public class Block {
     // @formatter:on
 
     // @formatter:off
-    protected final float[] LIGHT_CUBE_VERTICES = {
+    public final float[] LIGHT_CUBE_VERTICES = {
         // Positions            Texture Coords
         -0.5f, -0.5f, -0.5f,    0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,    1.0f, 0.0f,
@@ -313,7 +313,7 @@ public class Block {
     // @formatter:on
 
     // @formatter:off
-    protected final float[] COLORED_CUBE_VERTICES = {
+    public final float[] COLORED_CUBE_VERTICES = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
         0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 

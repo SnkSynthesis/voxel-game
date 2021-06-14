@@ -19,11 +19,14 @@ public class Mesh {
 
     private int vaoId; // Vertex Array Object ID
     private int vboId; // Vertex Buffer Object ID
+    private float[] vertices;
 
     /**
      * Normal constructor
      */
     public Mesh(float[] vertices) {
+        this.vertices = vertices;
+
         // Allocate memory
         FloatBuffer verticesBuffer = MemoryUtil.memAllocFloat(vertices.length);
         verticesBuffer.put(vertices).flip();
@@ -35,7 +38,7 @@ public class Mesh {
         // Vertices
         vboId = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, verticesBuffer, GL_DYNAMIC_DRAW);
         int positionSize = 3;
         int textureSize = 2;
         int normalSize = 3;
@@ -112,6 +115,17 @@ public class Mesh {
         // Unbind
         glBindVertexArray(0);
     }
+    
+    public void draw(int count) {
+        // Bind
+        glBindVertexArray(vaoId);
+
+        // Draw
+        glDrawArrays(GL_TRIANGLES, 0, count);
+
+        // Unbind
+        glBindVertexArray(0);
+    }
 
     public void destroy() {
         // Delete VBO
@@ -120,5 +134,9 @@ public class Mesh {
         // Delete VAO
         glBindVertexArray(0);
         glDeleteVertexArrays(vaoId);
+    }
+
+    public float[] getVertices() {
+        return vertices;
     }
 }

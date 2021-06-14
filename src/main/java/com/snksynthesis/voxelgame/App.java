@@ -9,8 +9,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 import com.snksynthesis.voxelgame.block.Block;
-import com.snksynthesis.voxelgame.block.BlockManager;
 import com.snksynthesis.voxelgame.block.BlockType;
+import com.snksynthesis.voxelgame.chunk.Chunk;
 import com.snksynthesis.voxelgame.gfx.*;
 
 public class App {
@@ -19,10 +19,12 @@ public class App {
     private Camera cam;
     private Shader shader;
     private Shader lightShader;
-    private BlockManager blockManager;
+    private Chunk chunk;
     private Block light;
     private Vector3f lightPos;
     private boolean toggleWireframe;
+    private int frames;
+    private double lastTime;
 
     private void draw(MemoryStack stack) {
         // Bind shader
@@ -41,7 +43,7 @@ public class App {
         var view = cam.getViewMat();
         glUniformMatrix4fv(shader.getLocation("view"), false, view.get(stack.mallocFloat(16)));
 
-        blockManager.draw(shader, stack);
+        chunk.draw(shader, stack);
 
         // Unbind shader
         shader.unbind();
@@ -81,9 +83,9 @@ public class App {
         cam = new Camera();
         cam.addMouseCallback(window);
 
-        blockManager = new BlockManager();
+        chunk = new Chunk();
 
-        lightPos = new Vector3f(blockManager.WIDTH / 2f, 20.5f, blockManager.LENGTH / 2f);
+        lightPos = new Vector3f(chunk.WIDTH / 2f, 20.5f, chunk.WIDTH / 2f);
         light = new Block(BlockType.LIGHT);
         light.getModel().translate(lightPos);
 
@@ -99,6 +101,9 @@ public class App {
             }
         });
 
+        frames = 0;
+        lastTime = glfwGetTime();
+
         glEnable(GL_DEPTH_TEST);
         glClearColor(0.1607843137254902f, 0.6235294117647059f, 1.0f, 1.0f);
     }
@@ -106,12 +111,13 @@ public class App {
     private void destroy() {
         shader.destroy();
         shader.destroy();
-        blockManager.destroy();
+        chunk.destroy();
     }
 
     private void update() {
         cam.procInput(window);
-        blockManager.genWorld();
+        chunk.genWorld();
+        calcFps();
     }
 
     private void run() {
@@ -132,6 +138,15 @@ public class App {
             window.update();
         }
         destroy();
+    }
+
+    private void calcFps() {
+        frames++;
+        if (glfwGetTime() - lastTime > 1.0) {
+            window.setTitle("Voxel Game | FPS: " + frames);
+            frames = 0;
+            lastTime = glfwGetTime();
+        }
     }
 
     public static void main(String[] args) {
