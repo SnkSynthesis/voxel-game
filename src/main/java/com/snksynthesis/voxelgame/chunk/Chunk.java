@@ -6,7 +6,7 @@ import com.snksynthesis.voxelgame.block.Block;
 import com.snksynthesis.voxelgame.block.BlockType;
 import com.snksynthesis.voxelgame.gfx.Mesh;
 import com.snksynthesis.voxelgame.gfx.Shader;
-import com.snksynthesis.voxelgame.gfx.Texture;
+import com.snksynthesis.voxelgame.texture.Texture;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;

@@ -1,6 +1,7 @@
 package com.snksynthesis.voxelgame.block;
 
 import com.snksynthesis.voxelgame.gfx.*;
+import com.snksynthesis.voxelgame.texture.Texture;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;

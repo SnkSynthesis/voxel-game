@@ -1,4 +1,4 @@
-package com.snksynthesis.voxelgame.gfx;
+package com.snksynthesis.voxelgame.texture;
 
 import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.stb.STBImage.*;
