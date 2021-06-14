@@ -3,10 +3,12 @@ package com.snksynthesis.voxelgame.chunk;
 import java.util.List;
 
 import com.snksynthesis.voxelgame.block.Block;
+import com.snksynthesis.voxelgame.block.BlockFace;
 import com.snksynthesis.voxelgame.block.BlockType;
 import com.snksynthesis.voxelgame.gfx.Mesh;
 import com.snksynthesis.voxelgame.gfx.Shader;
 import com.snksynthesis.voxelgame.texture.Texture;
+import com.snksynthesis.voxelgame.texture.TextureAtlas;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -32,7 +34,7 @@ public class Chunk {
     private Texture tex;
     private List<Float> vertices;
     private int blockCount;
-   
+
     public Chunk() {
         model = new Matrix4f();
         allocatedMem = MemoryUtil.memAllocFloat(16);
@@ -69,39 +71,45 @@ public class Chunk {
                 type = BlockType.SOIL;
             } else {
                 type = BlockType.GRASS;
-            } 
+            }
             addBlock(x, y, z, type);
         }
     }
 
+    private void addFace(BlockFace face, float x, float y, float z, BlockType type) {
+        float[] texCoords = TextureAtlas.getTexCoords(type, face);
+
+        int i = 0;
+        int j = 0;
+        do {
+            // Positions
+            vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
+            vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] + y);
+            vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
+
+            // Texture Coordinates
+            vertices.add(texCoords[j + 0]);
+            vertices.add(texCoords[j + 1]);
+
+            // Normals
+            vertices.add(Block.CUBE_NORMALS[face.getIndex()][i + 2]);
+            vertices.add(Block.CUBE_NORMALS[face.getIndex()][i + 0]);
+            vertices.add(Block.CUBE_NORMALS[face.getIndex()][i + 1]);
+
+            i += 3;
+            j += 2;
+
+        } while (i < Block.CUBE_POSITIONS[face.getIndex()].length);
+    }
+
     public void addBlock(float x, float y, float z, BlockType type) {
         blockCount++;
-        float[] baseVertices;
-        switch (type) {
-            case GRASS:
-                baseVertices = Block.GRASS_CUBE_VERTICES;
-                break;
-            case SOIL:
-                baseVertices = Block.SOIL_CUBE_VERTICES;
-                break;
-            case STONE:
-                baseVertices = Block.STONE_CUBE_VERTICES;
-                break;
-            default:
-                baseVertices = Block.STONE_CUBE_VERTICES;
-                break;
-        }
-        
-        for (int i = 0; i < baseVertices.length; i += 8) {
-            vertices.add(baseVertices[i + 0] + x);
-            vertices.add(baseVertices[i + 1] + y);
-            vertices.add(baseVertices[i + 2] + z);
-            vertices.add(baseVertices[i + 3]);
-            vertices.add(baseVertices[i + 4]);
-            vertices.add(baseVertices[i + 5]);
-            vertices.add(baseVertices[i + 6]);
-            vertices.add(baseVertices[i + 7]);
-        }
+        addFace(BlockFace.TOP, x, y, z, type);
+        addFace(BlockFace.BOTTOM, x, y, z, type);
+        addFace(BlockFace.LEFT, x, y, z, type);
+        addFace(BlockFace.RIGHT, x, y, z, type);
+        addFace(BlockFace.FRONT, x, y, z, type);
+        addFace(BlockFace.BACK, x, y, z, type);
     }
 
     private float ridgeNoise(float nx, float nz) {
@@ -114,9 +122,8 @@ public class Chunk {
                 float nx = x / 200 + 0.5f;
                 float nz = z / 200 + 0.5f;
 
-                float height = ridgeNoise(nx * 4.77f, nz * 3.77f) 
-                    + ridgeNoise(nx * 2.77f, nz * 1.77f) 
-                    + ridgeNoise(nx * 0.5f, nz * 1.3f);
+                float height = ridgeNoise(nx * 4.77f, nz * 3.77f) + ridgeNoise(nx * 2.77f, nz * 1.77f)
+                        + ridgeNoise(nx * 0.5f, nz * 1.3f);
 
                 height = (float) Math.pow(height, 2.01);
                 height += 0.5;
@@ -132,9 +139,9 @@ public class Chunk {
                 for (int i = 0; i < vertices.size(); i++) {
                     verticesArr[i] = vertices.get(i).floatValue();
                 }
-        
+
                 mesh = new Mesh(verticesArr);
             }
-        } 
+        }
     }
 }
