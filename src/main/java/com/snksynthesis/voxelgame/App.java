@@ -36,7 +36,7 @@ public class App {
 
         // Projection Matrix
         var aspectRatio = (float) window.getWidth() / window.getHeight();
-        var projection = new Matrix4f().setPerspective((float) Math.toRadians(100.0f), aspectRatio, 0.1f, 100.0f);
+        var projection = new Matrix4f().setPerspective((float) Math.toRadians(100.0f), aspectRatio, 0.1f, 200.0f);
         glUniformMatrix4fv(shader.getLocation("projection"), false, projection.get(stack.mallocFloat(16)));
 
         // View Matrix
