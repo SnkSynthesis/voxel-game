@@ -7,7 +7,7 @@ import org.joml.Vector2f;
 
 public class TextureAtlas {
 
-    private static final float IMG_WIDTH_PX = 64.0f;
+    private static final float IMG_WIDTH_PX = 128.0f;
     private static final float TEX_WIDTH_PX = 32.0f;
     private static final float TEX_WIDTH = TEX_WIDTH_PX / IMG_WIDTH_PX;
 
@@ -22,7 +22,7 @@ public class TextureAtlas {
             case GRASS:
                 switch (face) {
                     case TOP:
-                        return TextureAtlas.getTexCoordsByRowCol(face, 0, 1);
+                        return TextureAtlas.getTexCoordsByRowCol(face, 1, 0);
 
                     case BOTTOM:
                         return TextureAtlas.getTexCoordsByRowCol(face, 0, 0);
@@ -35,7 +35,11 @@ public class TextureAtlas {
                         return TextureAtlas.getTexCoordsByRowCol(face, 1, 1);
                 }
             case STONE:
-                return TextureAtlas.getTexCoordsByRowCol(face, 1, 0);
+                return TextureAtlas.getTexCoordsByRowCol(face, 0, 1);
+            
+            case SAND:
+                return TextureAtlas.getTexCoordsByRowCol(face, 2, 0);
+
             case SOIL:
             default:
                 return TextureAtlas.getTexCoordsByRowCol(face, 0, 0);
@@ -44,14 +48,14 @@ public class TextureAtlas {
 
     /**
      * @param row 0-based starts from bottom right corner of image
-     * @param col 0-based starts from bottom right corner of image
+     * @param col 0-based starts from bottom right corner of image 
      */
     private static float[] getTexCoordsByRowCol(BlockFace face, int row, int col) {
-        float offsetX = TEX_WIDTH * row;
-        float offsetY = TEX_WIDTH * col;
-        return getTexCoordsRaw(face, new Vector2f(0.0f + offsetX, 0.5f + offsetY),
-                new Vector2f(0.5f + offsetX, 0.5f + offsetY), new Vector2f(0.0f + offsetX, 0.0f + offsetY),
-                new Vector2f(0.5f + offsetX, 0.0f + offsetY));
+        float offsetX = TEX_WIDTH * col;
+        float offsetY = TEX_WIDTH * row;
+        return getTexCoordsRaw(face, new Vector2f(0.0f + offsetX, TEX_WIDTH + offsetY),
+                new Vector2f(TEX_WIDTH + offsetX, TEX_WIDTH + offsetY), new Vector2f(0.0f + offsetX, 0.0f + offsetY),
+                new Vector2f(TEX_WIDTH + offsetX, 0.0f + offsetY));
     }
 
     private static float[] getTexCoordsRaw(BlockFace face, Vector2f topLeft, Vector2f topRight, Vector2f bottomLeft,

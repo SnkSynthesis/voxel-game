@@ -23,7 +23,7 @@ import static org.lwjgl.opengl.GL33.*;
 
 public class Chunk {
 
-    public final int WIDTH = 100;
+    public final int WIDTH = 200;
 
     private float x;
     private float z;
@@ -38,7 +38,7 @@ public class Chunk {
     public Chunk() {
         model = new Matrix4f();
         allocatedMem = MemoryUtil.memAllocFloat(16);
-        tex = Texture.loadRGBA("textures/soil+grass+stone.png");
+        tex = Texture.loadRGBA("textures/atlas.png");
         vertices = new ArrayList<>();
         blockCount = 0;
         new Random();
@@ -65,12 +65,20 @@ public class Chunk {
     private void genPillar(float x, float z, float height) {
         for (int y = 0; y < height; y++) {
             BlockType type;
-            if (y < height * 0.5) {
-                type = BlockType.STONE;
-            } else if (y < height * 0.9) {
-                type = BlockType.SOIL;
-            } else {
-                type = BlockType.GRASS;
+            while (true) {
+                if (height < 3 && y < height) {
+                    type = BlockType.SAND;
+                    break;
+                } else if (y < height * 0.5) {
+                    type = BlockType.STONE;
+                    break;
+                } else if (y < height * 0.95) {
+                    type = BlockType.SOIL;
+                    break;
+                } else {
+                    type = BlockType.GRASS;
+                    break;
+                }
             }
             addBlock(x, y, z, type);
         }
@@ -119,8 +127,8 @@ public class Chunk {
     public void genWorld() {
         if (z < WIDTH) {
             while (x < WIDTH) {
-                float nx = x / 200 + 0.5f;
-                float nz = z / 200 + 0.5f;
+                float nx = x / 300 + 0.5f;
+                float nz = z / 300 + 0.5f;
 
                 float height = ridgeNoise(nx * 4.77f, nz * 3.77f) + ridgeNoise(nx * 2.77f, nz * 1.77f)
                         + ridgeNoise(nx * 0.5f, nz * 1.3f);
