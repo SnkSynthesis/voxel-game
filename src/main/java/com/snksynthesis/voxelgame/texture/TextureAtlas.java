@@ -7,37 +7,54 @@ import org.joml.Vector2f;
 
 public class TextureAtlas {
 
+    private static final float IMG_WIDTH_PX = 64.0f;
+    private static final float TEX_WIDTH_PX = 32.0f;
+    private static final float TEX_WIDTH = TEX_WIDTH_PX / IMG_WIDTH_PX;
+
+    /**
+     * @param type the {@link BlockType}
+     * @param face which face of the block {@link BlockFace}
+     * @return the texture coordinates based on <code>type</code> and
+     *         <code>face</code> parameters
+     */
     public static float[] getTexCoords(BlockType type, BlockFace face) {
         switch (type) {
             case GRASS:
                 switch (face) {
                     case TOP:
-                        return TextureAtlas.getTexCoords(face, new Vector2f(0.0f, 1.0f), new Vector2f(0.5f, 1.0f),
-                                new Vector2f(0.0f, 0.5f), new Vector2f(0.5f, 0.5f));
+                        return TextureAtlas.getTexCoordsByRowCol(face, 0, 1);
 
                     case BOTTOM:
-                        return TextureAtlas.getTexCoords(face, new Vector2f(0.0f, 0.5f), new Vector2f(0.5f, 0.5f),
-                                new Vector2f(0.0f, 0.0f), new Vector2f(0.5f, 0.0f));
+                        return TextureAtlas.getTexCoordsByRowCol(face, 0, 0);
 
                     case LEFT:
                     case RIGHT:
                     case FRONT:
                     case BACK:
                     default:
-                        return TextureAtlas.getTexCoords(face, new Vector2f(0.5f, 1.0f), new Vector2f(1.0f, 1.0f),
-                                new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 0.5f));
+                        return TextureAtlas.getTexCoordsByRowCol(face, 1, 1);
                 }
             case STONE:
-                return TextureAtlas.getTexCoords(face, new Vector2f(0.5f, 0.5f), new Vector2f(1.0f, 0.5f),
-                        new Vector2f(0.5f, 0.0f), new Vector2f(1.0f, 0.0f));
+                return TextureAtlas.getTexCoordsByRowCol(face, 1, 0);
             case SOIL:
             default:
-                return TextureAtlas.getTexCoords(face, new Vector2f(0.0f, 0.5f), new Vector2f(0.5f, 0.5f),
-                        new Vector2f(0.0f, 0.0f), new Vector2f(0.5f, 0.0f));
+                return TextureAtlas.getTexCoordsByRowCol(face, 0, 0);
         }
     }
 
-    private static float[] getTexCoords(BlockFace face, Vector2f topLeft, Vector2f topRight, Vector2f bottomLeft,
+    /**
+     * @param row 0-based starts from bottom right corner of image
+     * @param col 0-based starts from bottom right corner of image
+     */
+    private static float[] getTexCoordsByRowCol(BlockFace face, int row, int col) {
+        float offsetX = TEX_WIDTH * row;
+        float offsetY = TEX_WIDTH * col;
+        return getTexCoordsRaw(face, new Vector2f(0.0f + offsetX, 0.5f + offsetY),
+                new Vector2f(0.5f + offsetX, 0.5f + offsetY), new Vector2f(0.0f + offsetX, 0.0f + offsetY),
+                new Vector2f(0.5f + offsetX, 0.0f + offsetY));
+    }
+
+    private static float[] getTexCoordsRaw(BlockFace face, Vector2f topLeft, Vector2f topRight, Vector2f bottomLeft,
             Vector2f bottomRight) {
         switch (face) {
             case TOP:

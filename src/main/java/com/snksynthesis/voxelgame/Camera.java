@@ -99,6 +99,14 @@ public class Camera {
         });
     }
 
+    public void setPos(float x, float y, float z) {
+        pos.set(x, y, z);
+    }
+
+    public Vector3f getPos() {
+        return pos;
+    }
+
     public Matrix4f getViewMat() {
         return new Matrix4f().lookAt(pos, new Vector3f(pos).add(front), Camera.UP);
     }

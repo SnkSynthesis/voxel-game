@@ -80,10 +80,11 @@ public class App {
             e.printStackTrace();
         }
 
-        cam = new Camera();
-        cam.addMouseCallback(window);
-
         chunk = new Chunk();
+
+        cam = new Camera();
+        cam.setPos(chunk.WIDTH / 2f, 10f, chunk.WIDTH / 2f);
+        cam.addMouseCallback(window);
 
         lightPos = new Vector3f(chunk.WIDTH / 2f, 20.5f, chunk.WIDTH / 2f);
         light = new Block(BlockType.LIGHT);
