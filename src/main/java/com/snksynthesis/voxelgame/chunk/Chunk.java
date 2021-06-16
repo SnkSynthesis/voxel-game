@@ -17,7 +17,6 @@ import org.joml.Matrix4f;
 import org.joml.SimplexNoise;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-import java.util.Random;
 
 import static org.lwjgl.opengl.GL33.*;
 
@@ -41,7 +40,6 @@ public class Chunk {
         tex = Texture.loadRGBA("textures/atlas.png");
         vertices = new ArrayList<>();
         blockCount = 0;
-        new Random();
     }
 
     public void draw(Shader shader, MemoryStack stack) {
