@@ -6,10 +6,7 @@ import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
 
-import com.snksynthesis.voxelgame.block.Block;
-import com.snksynthesis.voxelgame.block.BlockType;
 import com.snksynthesis.voxelgame.chunk.Chunk;
 import com.snksynthesis.voxelgame.gfx.*;
 
@@ -18,10 +15,7 @@ public class App {
     private Window window;
     private Camera cam;
     private Shader shader;
-    private Shader lightShader;
     private Chunk chunk;
-    private Block light;
-    private Vector3f lightPos;
     private boolean toggleWireframe;
     private int frames;
     private double lastTime;
@@ -29,10 +23,6 @@ public class App {
     private void draw(MemoryStack stack) {
         // Bind shader
         shader.bind();
-
-        // Set light color and position
-        glUniform3fv(shader.getLocation("lightPos"), lightPos.get(stack.mallocFloat(3)));
-        glUniform3f(shader.getLocation("lightColor"), 1.0f, 1.0f, 1.0f);
 
         // Projection Matrix
         var aspectRatio = (float) window.getWidth() / window.getHeight();
@@ -47,19 +37,6 @@ public class App {
 
         // Unbind shader
         shader.unbind();
-
-        // Bind Light Shader
-        lightShader.bind();
-
-        // Set projection and view matrices
-        glUniformMatrix4fv(lightShader.getLocation("projection"), false, projection.get(stack.mallocFloat(16)));
-        glUniformMatrix4fv(lightShader.getLocation("view"), false, view.get(stack.mallocFloat(16)));
-
-        // Draw light source
-        light.draw(lightShader, stack);
-
-        // Unbind light shader
-        lightShader.unbind();
     }
 
     private void init() {
@@ -73,22 +50,11 @@ public class App {
             e.printStackTrace();
         }
 
-        lightShader = new Shader("shaders/light_vertex.glsl", "shaders/light_fragment.glsl");
-        try {
-            lightShader.link();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         chunk = new Chunk();
 
         cam = new Camera();
         cam.setPos(chunk.WIDTH / 2f, 10f, chunk.WIDTH / 2f);
         cam.addMouseCallback(window);
-
-        lightPos = new Vector3f(chunk.WIDTH / 2f, 20.5f, chunk.WIDTH / 2f);
-        light = new Block(BlockType.LIGHT);
-        light.getModel().translate(lightPos);
 
         toggleWireframe = false;
         glfwSetKeyCallback(window.getRawWindow(), (window, key, scancode, action, mods) -> {
@@ -110,7 +76,6 @@ public class App {
     }
 
     private void destroy() {
-        shader.destroy();
         shader.destroy();
         chunk.destroy();
     }

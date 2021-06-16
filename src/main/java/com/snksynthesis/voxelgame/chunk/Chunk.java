@@ -99,11 +99,6 @@ public class Chunk {
             vertices.add(texCoords[j + 0]);
             vertices.add(texCoords[j + 1]);
 
-            // Normals
-            vertices.add(Block.CUBE_NORMALS[face.getIndex()][i + 2]);
-            vertices.add(Block.CUBE_NORMALS[face.getIndex()][i + 0]);
-            vertices.add(Block.CUBE_NORMALS[face.getIndex()][i + 1]);
-
             i += 3;
             j += 2;
 

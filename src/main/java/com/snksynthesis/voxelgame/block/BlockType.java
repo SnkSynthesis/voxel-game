@@ -1,5 +1,5 @@
 package com.snksynthesis.voxelgame.block;
 
 public enum BlockType {
-    GRASS, SOIL, STONE, SAND, LIGHT
+    GRASS, SOIL, STONE, SAND
 }
