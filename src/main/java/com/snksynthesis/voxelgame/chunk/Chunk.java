@@ -1,7 +1,6 @@
 package com.snksynthesis.voxelgame.chunk;
 
 import java.util.List;
-
 import com.snksynthesis.voxelgame.block.Block;
 import com.snksynthesis.voxelgame.block.BlockFace;
 import com.snksynthesis.voxelgame.block.BlockType;
@@ -44,7 +43,8 @@ public class Chunk {
         blocks = new BlockType[WIDTH][HEIGHT][WIDTH];
         for (int x = 0; x < WIDTH; x++) {
             for (int z = 0; z < WIDTH; z++) {
-                for (int y = 0; y <= 2; y++) {
+                for (int y = 1; y <= 4; y++) {
+                    blocks[x][0][z] = BlockType.SAND;
                     blocks[x][y][z] = BlockType.WATER;
                 }
             }
@@ -74,7 +74,7 @@ public class Chunk {
         for (int y = 0; y < height; y++) {
             BlockType type;
             while (true) {
-                if (height < 3 && y < height) {
+                if (height < 6 && y < height) {
                     type = BlockType.SAND;
                     break;
                 } else if (y < height * 0.5) {
@@ -128,10 +128,6 @@ public class Chunk {
         blocks[(int) x][(int) y][(int) z] = type;
     }
 
-    private float ridgeNoise(float nx, float nz) {
-        return 2f * (0.5f - (float) Math.abs(0.5 - SimplexNoise.noise(nx, nz)));
-    }
-
     private boolean isVisibleFrom(int x, int y, int z, BlockType type) {
         try {
             if (x > blocks.length || y > blocks[x].length || z > blocks[x][y].length) {
@@ -179,18 +175,25 @@ public class Chunk {
         return faces;
     }
 
+    private float ridgeNoise(float nx, float nz) {
+        return 2f * (0.5f - (float) Math.abs(0.5 - SimplexNoise.noise(nx, nz)));
+    }
+
+    private float getNoiseHeight(float x, float z) {
+        float nx = x / 200 + 0.5f;
+        float nz = z / 200 + 0.5f;
+        return ridgeNoise(nx * 4.77f, nz * 3.77f) + ridgeNoise(nx * 2.77f, nz * 1.77f)
+                + ridgeNoise(nx * 0.5f, nz * 1.3f);
+    }
+
     public void genWorld() {
         if (z < WIDTH) {
             while (x < WIDTH) {
-                float nx = x / 200 + 0.5f;
-                float nz = z / 200 + 0.5f;
-
-                float height = ridgeNoise(nx * 4.77f, nz * 3.77f) + ridgeNoise(nx * 2.77f, nz * 1.77f)
-                        + ridgeNoise(nx * 0.5f, nz * 1.3f);
-
+                float height = getNoiseHeight(x, z);
                 height = (float) Math.pow(height, 2.01);
                 height += 0.5;
                 height *= 5;
+                height += 2;
                 genPillar(x, z, height);
                 x++;
             }
