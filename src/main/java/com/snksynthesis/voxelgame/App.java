@@ -17,7 +17,7 @@ public class App {
     private Shader shader;
     private Chunk chunk;
     private boolean toggleWireframe;
-    private int frames;
+    private int frames, fps;
     private double lastTime;
 
     private void draw(MemoryStack stack) {
@@ -81,6 +81,9 @@ public class App {
     }
 
     private void update() {
+        var camPos = cam.getPos();
+        window.setTitle("Voxel Game | FPS: " + fps + " | Pos: " + Math.round(camPos.x) + "x " + Math.round(camPos.y)
+                + "y " + Math.round(camPos.z) + "z");
         cam.procInput(window);
         chunk.genWorld();
         calcFps();
@@ -109,7 +112,7 @@ public class App {
     private void calcFps() {
         frames++;
         if (glfwGetTime() - lastTime > 1.0) {
-            window.setTitle("Voxel Game | FPS: " + frames);
+            fps = frames;
             frames = 0;
             lastTime = glfwGetTime();
         }

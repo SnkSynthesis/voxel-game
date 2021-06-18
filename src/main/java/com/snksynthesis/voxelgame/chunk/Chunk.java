@@ -23,23 +23,25 @@ import static org.lwjgl.opengl.GL33.*;
 public class Chunk {
 
     public final int WIDTH = 200;
+    public final int HEIGHT = 256;
 
-    private float x;
-    private float z;
+    private float x = 0;
+    private float z = 0;
 
     private Mesh mesh;
     private Matrix4f model;
     private FloatBuffer allocatedMem;
     private Texture tex;
     private List<Float> vertices;
-    private int blockCount;
+    private BlockType[][][] blocks;
+    private int blockCount = 0;
 
     public Chunk() {
         model = new Matrix4f();
         allocatedMem = MemoryUtil.memAllocFloat(16);
         tex = Texture.loadRGBA("textures/atlas.png");
         vertices = new ArrayList<>();
-        blockCount = 0;
+        blocks = new BlockType[WIDTH][HEIGHT][WIDTH];
     }
 
     public void draw(Shader shader, MemoryStack stack) {
@@ -61,6 +63,7 @@ public class Chunk {
     }
 
     private void genPillar(float x, float z, float height) {
+        // `int y = 0; ...` makes everything stay in integers and not floats
         for (int y = 0; y < height; y++) {
             BlockType type;
             while (true) {
@@ -105,23 +108,63 @@ public class Chunk {
 
     public void addBlock(float x, float y, float z, BlockType type) {
         blockCount++;
-        addFace(BlockFace.TOP, x, y, z, type);
-        addFace(BlockFace.BOTTOM, x, y, z, type);
-        addFace(BlockFace.LEFT, x, y, z, type);
-        addFace(BlockFace.RIGHT, x, y, z, type);
-        addFace(BlockFace.FRONT, x, y, z, type);
-        addFace(BlockFace.BACK, x, y, z, type);
+        blocks[(int) x][(int) y][(int) z] = type;
     }
 
     private float ridgeNoise(float nx, float nz) {
         return 2f * (0.5f - (float) Math.abs(0.5 - SimplexNoise.noise(nx, nz)));
     }
 
+    private boolean isEmpty(int x, int y, int z) {
+        try {
+            if (x > blocks.length || y > blocks[x].length || z > blocks[x][y].length) {
+                return true;
+            } else if (x < 0 || y < 0 || z < 0) {
+                return true;
+            }
+            return blocks[x][y][z] == null;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return true;
+        }
+    }
+
+    private List<BlockFace> getVisibleFaces(int x, int y, int z) {
+        var faces = new ArrayList<BlockFace>();
+
+        if (isEmpty(x + 1, y, z)) {
+            faces.add(BlockFace.BACK);
+        }
+        if (isEmpty(x - 1, y, z)) {
+            faces.add(BlockFace.FRONT);
+        }
+        if (isEmpty(x, y + 1, z)) {
+            faces.add(BlockFace.TOP);
+            if (blocks[x][y][z] == BlockType.SOIL) {
+                blocks[x][y][z] = BlockType.GRASS;
+            }
+        } else {
+            if (blocks[x][y + 1][z] == BlockType.GRASS) {
+                blocks[x][y][z] = BlockType.SOIL;
+            }
+        }
+        if (isEmpty(x, y - 1, z)) {
+            faces.add(BlockFace.BOTTOM);
+        }
+        if (isEmpty(x, y, z + 1)) {
+            faces.add(BlockFace.RIGHT);
+        }
+        if (isEmpty(x, y, z - 1)) {
+            faces.add(BlockFace.LEFT);
+        }
+
+        return faces;
+    }
+
     public void genWorld() {
         if (z < WIDTH) {
             while (x < WIDTH) {
-                float nx = x / 300 + 0.5f;
-                float nz = z / 300 + 0.5f;
+                float nx = x / 200 + 0.5f;
+                float nz = z / 200 + 0.5f;
 
                 float height = ridgeNoise(nx * 4.77f, nz * 3.77f) + ridgeNoise(nx * 2.77f, nz * 1.77f)
                         + ridgeNoise(nx * 0.5f, nz * 1.3f);
@@ -136,6 +179,19 @@ public class Chunk {
             z++;
         } else {
             if (mesh == null) {
+                for (int y = 0; y < HEIGHT; y++) {
+                    for (int x = 0; x < WIDTH; x++) {
+                        for (int z = 0; z < WIDTH; z++) {
+                            if (blocks[x][y][z] != null) {
+                                var visibleFaces = getVisibleFaces(x, y, z);
+                                for (BlockFace face : visibleFaces) {
+                                    addFace(face, x, y, z, blocks[x][y][z]);
+                                }
+                            }
+                        }
+                    }
+                }
+
                 var verticesArr = new float[vertices.size()];
                 for (int i = 0; i < vertices.size(); i++) {
                     verticesArr[i] = vertices.get(i).floatValue();
