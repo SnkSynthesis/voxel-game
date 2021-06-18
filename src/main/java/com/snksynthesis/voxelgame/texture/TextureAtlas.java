@@ -40,6 +40,9 @@ public class TextureAtlas {
             case SAND:
                 return TextureAtlas.getTexCoordsByRowCol(face, 2, 0);
 
+            case WATER:
+                return TextureAtlas.getTexCoordsByRowCol(face, 2, 1);
+
             case SOIL:
             default:
                 return TextureAtlas.getTexCoordsByRowCol(face, 0, 0);

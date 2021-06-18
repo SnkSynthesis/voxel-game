@@ -42,6 +42,13 @@ public class Chunk {
         tex = Texture.loadRGBA("textures/atlas.png");
         vertices = new ArrayList<>();
         blocks = new BlockType[WIDTH][HEIGHT][WIDTH];
+        for (int x = 0; x < WIDTH; x++) {
+            for (int z = 0; z < WIDTH; z++) {
+                for (int y = 0; y <= 2; y++) {
+                    blocks[x][y][z] = BlockType.WATER;
+                }
+            }
+        }
     }
 
     public void draw(Shader shader, MemoryStack stack) {
@@ -90,11 +97,21 @@ public class Chunk {
 
         int i = 0;
         int j = 0;
+        boolean addedVertices = false;
         do {
             // Positions
-            vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
-            vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] + y);
-            vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
+            if (type == BlockType.WATER) {
+                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
+                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] * 0.4f + y);
+                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
+                addedVertices = true;
+            }
+
+            if (addedVertices == false) {
+                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
+                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] + y);
+                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
+            }
 
             // Texture Coordinates
             vertices.add(texCoords[j + 0]);
@@ -115,11 +132,13 @@ public class Chunk {
         return 2f * (0.5f - (float) Math.abs(0.5 - SimplexNoise.noise(nx, nz)));
     }
 
-    private boolean isEmpty(int x, int y, int z) {
+    private boolean isVisibleFrom(int x, int y, int z, BlockType type) {
         try {
             if (x > blocks.length || y > blocks[x].length || z > blocks[x][y].length) {
                 return true;
             } else if (x < 0 || y < 0 || z < 0) {
+                return true;
+            } else if (blocks[x][y][z] == BlockType.WATER && type != BlockType.WATER) {
                 return true;
             }
             return blocks[x][y][z] == null;
@@ -128,16 +147,16 @@ public class Chunk {
         }
     }
 
-    private List<BlockFace> getVisibleFaces(int x, int y, int z) {
+    private List<BlockFace> getVisibleFaces(int x, int y, int z, BlockType type) {
         var faces = new ArrayList<BlockFace>();
 
-        if (isEmpty(x + 1, y, z)) {
+        if (isVisibleFrom(x + 1, y, z, type)) {
             faces.add(BlockFace.BACK);
         }
-        if (isEmpty(x - 1, y, z)) {
+        if (isVisibleFrom(x - 1, y, z, type)) {
             faces.add(BlockFace.FRONT);
         }
-        if (isEmpty(x, y + 1, z)) {
+        if (isVisibleFrom(x, y + 1, z, type)) {
             faces.add(BlockFace.TOP);
             if (blocks[x][y][z] == BlockType.SOIL) {
                 blocks[x][y][z] = BlockType.GRASS;
@@ -147,13 +166,13 @@ public class Chunk {
                 blocks[x][y][z] = BlockType.SOIL;
             }
         }
-        if (isEmpty(x, y - 1, z)) {
+        if (isVisibleFrom(x, y - 1, z, type)) {
             faces.add(BlockFace.BOTTOM);
         }
-        if (isEmpty(x, y, z + 1)) {
+        if (isVisibleFrom(x, y, z + 1, type)) {
             faces.add(BlockFace.RIGHT);
         }
-        if (isEmpty(x, y, z - 1)) {
+        if (isVisibleFrom(x, y, z - 1, type)) {
             faces.add(BlockFace.LEFT);
         }
 
@@ -183,7 +202,7 @@ public class Chunk {
                     for (int x = 0; x < WIDTH; x++) {
                         for (int z = 0; z < WIDTH; z++) {
                             if (blocks[x][y][z] != null) {
-                                var visibleFaces = getVisibleFaces(x, y, z);
+                                var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
                                 for (BlockFace face : visibleFaces) {
                                     addFace(face, x, y, z, blocks[x][y][z]);
                                 }
