@@ -7,7 +7,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import org.joml.Matrix4f;
 
-import com.snksynthesis.voxelgame.chunk.Chunk;
+import com.snksynthesis.voxelgame.chunk.ChunkManager;
 import com.snksynthesis.voxelgame.gfx.*;
 
 public class App {
@@ -15,7 +15,7 @@ public class App {
     private Window window;
     private Camera cam;
     private Shader shader;
-    private Chunk chunk;
+    private ChunkManager chunkManager;
     private boolean toggleWireframe;
     private int frames, fps;
     private double lastTime;
@@ -33,7 +33,7 @@ public class App {
         var view = cam.getViewMat();
         glUniformMatrix4fv(shader.getLocation("view"), false, view.get(stack.mallocFloat(16)));
 
-        chunk.draw(shader, stack);
+        chunkManager.draw(shader, stack);
 
         // Unbind shader
         shader.unbind();
@@ -50,10 +50,10 @@ public class App {
             e.printStackTrace();
         }
 
-        chunk = new Chunk();
+        chunkManager = new ChunkManager();
 
         cam = new Camera();
-        cam.setPos(chunk.WIDTH / 2f, 10f, chunk.WIDTH / 2f);
+        cam.setPos(0f, 10f, 0f);
         cam.addMouseCallback(window);
 
         toggleWireframe = false;
@@ -77,15 +77,17 @@ public class App {
 
     private void destroy() {
         shader.destroy();
-        chunk.destroy();
+        chunkManager.destroy();
     }
 
     private void update() {
         var camPos = cam.getPos();
         window.setTitle("Voxel Game | FPS: " + fps + " | Pos: " + Math.round(camPos.x) + "x " + Math.round(camPos.y)
                 + "y " + Math.round(camPos.z) + "z");
-        cam.procInput(window);
-        chunk.genWorld();
+        cam.update(window);
+        
+        chunkManager.setCamPos(camPos);
+        chunkManager.update(window);
         calcFps();
     }
 

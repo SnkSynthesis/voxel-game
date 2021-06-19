@@ -1,11 +1,14 @@
 package com.snksynthesis.voxelgame.chunk;
 
 import java.util.List;
+
+import com.snksynthesis.voxelgame.Entity;
 import com.snksynthesis.voxelgame.block.Block;
 import com.snksynthesis.voxelgame.block.BlockFace;
 import com.snksynthesis.voxelgame.block.BlockType;
 import com.snksynthesis.voxelgame.gfx.Mesh;
 import com.snksynthesis.voxelgame.gfx.Shader;
+import com.snksynthesis.voxelgame.gfx.Window;
 import com.snksynthesis.voxelgame.texture.Texture;
 import com.snksynthesis.voxelgame.texture.TextureAtlas;
 
@@ -14,18 +17,18 @@ import java.util.ArrayList;
 
 import org.joml.Matrix4f;
 import org.joml.SimplexNoise;
+import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import static org.lwjgl.opengl.GL33.*;
 
-public class Chunk {
+public class Chunk implements Entity {
 
     public final int WIDTH = 200;
     public final int HEIGHT = 256;
 
-    private float x = 0;
-    private float z = 0;
+    private float x, startX, z, startZ;
 
     private Mesh mesh;
     private Matrix4f model;
@@ -35,12 +38,16 @@ public class Chunk {
     private BlockType[][][] blocks;
     private int blockCount = 0;
 
-    public Chunk() {
+    public Chunk(float startX, float startZ) {
         model = new Matrix4f();
         allocatedMem = MemoryUtil.memAllocFloat(16);
         tex = Texture.loadRGBA("textures/atlas.png");
         vertices = new ArrayList<>();
         blocks = new BlockType[WIDTH][HEIGHT][WIDTH];
+
+        this.startX = startX;
+        this.startZ = startZ;
+
         for (int x = 0; x < WIDTH; x++) {
             for (int z = 0; z < WIDTH; z++) {
                 for (int y = 1; y <= 4; y++) {
@@ -51,6 +58,7 @@ public class Chunk {
         }
     }
 
+    @Override
     public void draw(Shader shader, MemoryStack stack) {
         if (mesh != null) {
             int modelLoc = glGetUniformLocation(shader.getProgramId(), "model");
@@ -62,6 +70,12 @@ public class Chunk {
         }
     }
 
+    @Override
+    public void update(Window window) {
+        genWorld();
+    }
+
+    @Override
     public void destroy() {
         MemoryUtil.memFree(allocatedMem);
         if (mesh != null) {
@@ -207,7 +221,7 @@ public class Chunk {
                             if (blocks[x][y][z] != null) {
                                 var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
                                 for (BlockFace face : visibleFaces) {
-                                    addFace(face, x, y, z, blocks[x][y][z]);
+                                    addFace(face, x + startX, y, z + startZ, blocks[x][y][z]);
                                 }
                             }
                         }
@@ -222,5 +236,9 @@ public class Chunk {
                 mesh = new Mesh(verticesArr);
             }
         }
+    }
+
+    public Vector3f getPos() {
+        return new Vector3f((WIDTH / 2) + startX, 0f, (WIDTH / 2) + startZ);
     }
 }

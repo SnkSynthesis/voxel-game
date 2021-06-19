@@ -2,11 +2,14 @@ package com.snksynthesis.voxelgame;
 
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.glfw.GLFW.*;
+
+import com.snksynthesis.voxelgame.gfx.Shader;
 import com.snksynthesis.voxelgame.gfx.Window;
 
-public class Camera {
+public class Camera implements Entity {
 
     private Vector3f front, pos;
     private boolean firstMouse;
@@ -109,5 +112,20 @@ public class Camera {
 
     public Matrix4f getViewMat() {
         return new Matrix4f().lookAt(pos, new Vector3f(pos).add(front), Camera.UP);
+    }
+
+    @Override
+    public void draw(Shader shader, MemoryStack stack) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void update(Window window) {
+        procInput(window);
+    }
+
+    @Override
+    public void destroy() {
+        throw new UnsupportedOperationException();
     }
 }
