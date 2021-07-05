@@ -1,6 +1,7 @@
 package com.snksynthesis.voxelgame.chunk;
 
 import java.util.List;
+import java.util.Random;
 
 import com.snksynthesis.voxelgame.Entity;
 import com.snksynthesis.voxelgame.Noise;
@@ -25,8 +26,10 @@ import static org.lwjgl.opengl.GL33.*;
 
 public class Chunk implements Entity {
 
-    public final int WIDTH = 200;
+    public final int WIDTH = 100;
     public final int HEIGHT = 256;
+    
+    private final int WATER_HEIGHT = 4;
 
     private float x, startX, z, startZ;
 
@@ -37,6 +40,7 @@ public class Chunk implements Entity {
     private List<Float> vertices;
     private BlockType[][][] blocks;
     private int blockCount = 0;
+    private Random rand;
 
     public Chunk(float startX, float startZ) {
         model = new Matrix4f();
@@ -44,14 +48,19 @@ public class Chunk implements Entity {
         tex = Texture.loadRGBA("textures/atlas.png");
         vertices = new ArrayList<>();
         blocks = new BlockType[WIDTH][HEIGHT][WIDTH];
+        rand = new Random();
 
         this.startX = startX;
         this.startZ = startZ;
 
         for (int x = 0; x < WIDTH; x++) {
             for (int z = 0; z < WIDTH; z++) {
-                for (int y = 1; y <= 4; y++) {
-                    blocks[x][0][z] = BlockType.SAND;
+                for (int y = 1; y <= WATER_HEIGHT; y++) {
+                    if (rand.nextBoolean()) {
+                        blocks[x][0][z] = BlockType.SAND;
+                    } else {
+                        blocks[x][0][z] = BlockType.STONE;
+                    }
                     blocks[x][y][z] = BlockType.WATER;
                 }
             }
@@ -88,8 +97,15 @@ public class Chunk implements Entity {
         for (int y = 0; y < height; y++) {
             BlockType type;
             while (true) {
-                if (height < 6 && y < height) {
+                if (height < WATER_HEIGHT + 2 && y < height) {
                     type = BlockType.SAND;
+                    if (height < WATER_HEIGHT && y < height) {
+                        if (rand.nextBoolean()) {
+                            type = BlockType.SAND;
+                        } else {
+                            type = BlockType.STONE;
+                        }
+                    }
                     break;
                 } else if (y < height * 0.5) {
                     type = BlockType.STONE;
@@ -130,6 +146,13 @@ public class Chunk implements Entity {
             // Texture Coordinates
             vertices.add(texCoords[j + 0]);
             vertices.add(texCoords[j + 1]);
+
+            // Alpha Values
+            if (type == BlockType.WATER) {
+                vertices.add(0.8f);
+            } else {
+                vertices.add(1.0f);
+            }
 
             i += 3;
             j += 2;
@@ -196,7 +219,7 @@ public class Chunk implements Entity {
                 height = (float) Math.pow(height, 2.01);
                 height += 0.5;
                 height *= 5;
-                height += 2;
+                // height += 2;
                 genPillar(x, z, height);
                 x++;
             }
