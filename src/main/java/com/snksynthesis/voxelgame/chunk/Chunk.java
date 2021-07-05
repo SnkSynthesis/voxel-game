@@ -3,6 +3,7 @@ package com.snksynthesis.voxelgame.chunk;
 import java.util.List;
 
 import com.snksynthesis.voxelgame.Entity;
+import com.snksynthesis.voxelgame.Noise;
 import com.snksynthesis.voxelgame.block.Block;
 import com.snksynthesis.voxelgame.block.BlockFace;
 import com.snksynthesis.voxelgame.block.BlockType;
@@ -16,7 +17,6 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import org.joml.Matrix4f;
-import org.joml.SimplexNoise;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -189,21 +189,10 @@ public class Chunk implements Entity {
         return faces;
     }
 
-    private float ridgeNoise(float nx, float nz) {
-        return 2f * (0.5f - (float) Math.abs(0.5 - SimplexNoise.noise(nx, nz)));
-    }
-
-    private float getNoiseHeight(float x, float z) {
-        float nx = x / 200 + 0.5f;
-        float nz = z / 200 + 0.5f;
-        return ridgeNoise(nx * 4.77f, nz * 3.77f) + ridgeNoise(nx * 2.77f, nz * 1.77f)
-                + ridgeNoise(nx * 0.5f, nz * 1.3f);
-    }
-
     public void genWorld() {
         if (z < WIDTH) {
             while (x < WIDTH) {
-                float height = getNoiseHeight(x, z);
+                float height = Noise.getNoiseHeight(x, z);
                 height = (float) Math.pow(height, 2.01);
                 height += 0.5;
                 height *= 5;
@@ -238,7 +227,11 @@ public class Chunk implements Entity {
         }
     }
 
-    public Vector3f getPos() {
-        return new Vector3f((WIDTH / 2) + startX, 0f, (WIDTH / 2) + startZ);
+    public Vector3f getStartPos() {
+        return new Vector3f(startX, 0f, startZ);
+    }
+
+    public Vector3f getEndPos() {
+        return new Vector3f(startX + WIDTH, 0f, startZ + WIDTH);
     }
 }
