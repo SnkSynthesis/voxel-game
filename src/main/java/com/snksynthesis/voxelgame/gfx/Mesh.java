@@ -8,9 +8,10 @@ import static org.lwjgl.opengl.GL33.*;
 public class Mesh {
 
     public static int POSITION_SIZE = 3;
-    public static int ALPHA_VALUE_SIZE = 1;
     public static int TEXTURE_COORD_SIZE = 2;
-    public static int VERTEX_SIZE = POSITION_SIZE + ALPHA_VALUE_SIZE + TEXTURE_COORD_SIZE;
+    public static int ALPHA_VALUE_SIZE = 1;
+    public static int AMBIENT_VALUE_SIZE = 1;
+    public static int VERTEX_SIZE = POSITION_SIZE + TEXTURE_COORD_SIZE + ALPHA_VALUE_SIZE + AMBIENT_VALUE_SIZE;
 
     private int vaoId; // Vertex Array Object ID
     private int vboId; // Vertex Buffer Object ID
@@ -48,13 +49,18 @@ public class Mesh {
 
         // Texture Coordinates
         glVertexAttribPointer(1, TEXTURE_COORD_SIZE, GL_FLOAT, false, VERTEX_SIZE * Float.BYTES,
-                POSITION_SIZE * Float.BYTES);
+                getSumInBytes(POSITION_SIZE));
         glEnableVertexAttribArray(1);
 
         // Alpha Values
         glVertexAttribPointer(2, ALPHA_VALUE_SIZE, GL_FLOAT, false, VERTEX_SIZE * Float.BYTES,
-                (POSITION_SIZE * Float.BYTES) + (TEXTURE_COORD_SIZE * Float.BYTES));
+                getSumInBytes(POSITION_SIZE, TEXTURE_COORD_SIZE));
         glEnableVertexAttribArray(2);
+
+        // Ambient Values
+        glVertexAttribPointer(3, AMBIENT_VALUE_SIZE, GL_FLOAT, false, VERTEX_SIZE * Float.BYTES,
+                getSumInBytes(POSITION_SIZE, TEXTURE_COORD_SIZE, ALPHA_VALUE_SIZE));
+        glEnableVertexAttribArray(3);
 
         // Unbind VBO and VAO
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -88,5 +94,13 @@ public class Mesh {
 
     public float[] getVertices() {
         return vertices;
+    }
+
+    private int getSumInBytes(int... sizes) {
+        int sizeSum = 0;
+        for (int size : sizes) {
+            sizeSum += size * Float.BYTES;
+        }
+        return sizeSum;
     }
 }

@@ -154,6 +154,31 @@ public class Chunk implements Entity {
                 vertices.add(1.0f);
             }
 
+            // Ambient Values
+            switch (face) {
+                case BACK:
+                    vertices.add(0.7f);
+                    break;
+                case BOTTOM:
+                    vertices.add(0.3f);
+                    break;
+                case FRONT:
+                    vertices.add(0.75f);
+                    break;
+                case LEFT:
+                    vertices.add(0.8f);
+                    break;
+                case RIGHT:
+                    vertices.add(0.85f);
+                    break;
+                case TOP:
+                    vertices.add(1.0f);
+                    break;
+                default:
+                    vertices.add(1.0f);
+                    break;
+            }
+
             i += 3;
             j += 2;
 
