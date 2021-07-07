@@ -280,6 +280,7 @@ public class Chunk implements Entity {
                                 var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
                                 for (BlockFace face : visibleFaces) {
                                     if (blocks[x][y][z] == BlockType.WATER && visibleFaces.contains(BlockFace.TOP)) {
+                                        // Show only top face for water blocks and exclude all other faces
                                         addFace(BlockFace.TOP, x + startX, y, z + startZ, blocks[x][y][z], true);
                                     } else {
                                         addFace(face, x + startX, y, z + startZ, blocks[x][y][z], false);
