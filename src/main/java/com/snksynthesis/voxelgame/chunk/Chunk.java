@@ -28,18 +28,21 @@ public class Chunk implements Entity {
 
     public final int WIDTH = 100;
     public final int HEIGHT = 256;
-    
+
     private final int WATER_HEIGHT = 4;
 
     private float x, startX, z, startZ;
 
     private Mesh mesh;
+    private Mesh waterMesh;
     private Matrix4f model;
     private FloatBuffer allocatedMem;
     private Texture tex;
     private List<Float> vertices;
+    private List<Float> waterVertices;
     private BlockType[][][] blocks;
     private int blockCount = 0;
+    private int waterBlockCount = 0;
     private Random rand;
 
     public Chunk(float startX, float startZ) {
@@ -47,6 +50,7 @@ public class Chunk implements Entity {
         allocatedMem = MemoryUtil.memAllocFloat(16);
         tex = Texture.loadRGBA("textures/atlas.png");
         vertices = new ArrayList<>();
+        waterVertices = new ArrayList<>();
         blocks = new BlockType[WIDTH][HEIGHT][WIDTH];
         rand = new Random();
 
@@ -57,11 +61,11 @@ public class Chunk implements Entity {
             for (int z = 0; z < WIDTH; z++) {
                 for (int y = 1; y <= WATER_HEIGHT; y++) {
                     if (rand.nextBoolean()) {
-                        blocks[x][0][z] = BlockType.SAND;
+                        addBlock(x, 0, z, BlockType.SAND);
                     } else {
-                        blocks[x][0][z] = BlockType.STONE;
+                        addBlock(x, 0, z, BlockType.STONE);
                     }
-                    blocks[x][y][z] = BlockType.WATER;
+                    addBlock(x, y, z, BlockType.WATER);
                 }
             }
         }
@@ -75,6 +79,9 @@ public class Chunk implements Entity {
             tex.bind();
             // blockCount * 6 faces * 2 triangles * 8 vertices
             mesh.draw(blockCount * 6 * 2 * 8);
+            if (waterMesh != null) {
+                waterMesh.draw(waterBlockCount * 6 * 2 * 8);
+            }
             tex.unbind();
         }
     }
@@ -89,6 +96,9 @@ public class Chunk implements Entity {
         MemoryUtil.memFree(allocatedMem);
         if (mesh != null) {
             mesh.destroy();
+        }
+        if (waterMesh != null) {
+            waterMesh.destroy();
         }
     }
 
@@ -122,8 +132,10 @@ public class Chunk implements Entity {
         }
     }
 
-    private void addFace(BlockFace face, float x, float y, float z, BlockType type) {
+    private void addFace(BlockFace face, float x, float y, float z, BlockType type, boolean blockHeightReducible) {
         float[] texCoords = TextureAtlas.getTexCoords(type, face);
+
+        List<Float> vertices = new ArrayList<>();
 
         int i = 0;
         int j = 0;
@@ -131,7 +143,11 @@ public class Chunk implements Entity {
             // Positions
             if (type == BlockType.WATER) {
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
-                vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] * 0.4f + y);
+                if (Block.CUBE_POSITIONS[face.getIndex()][i + 1] == 0.5f && blockHeightReducible) {
+                    vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] * 0.4f + y);
+                } else {
+                    vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] + y);
+                }
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
             } else {
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
@@ -179,10 +195,20 @@ public class Chunk implements Entity {
             j += 2;
 
         } while (i < Block.CUBE_POSITIONS[face.getIndex()].length);
+
+        if (type == BlockType.WATER) {
+            this.waterVertices.addAll(vertices);
+        } else {
+            this.vertices.addAll(vertices);
+        }
     }
 
     public void addBlock(float x, float y, float z, BlockType type) {
-        blockCount++;
+        if (type == BlockType.WATER) {
+            waterBlockCount++;
+        } else {
+            blockCount++;
+        }
         blocks[(int) x][(int) y][(int) z] = type;
     }
 
@@ -254,7 +280,11 @@ public class Chunk implements Entity {
                             if (blocks[x][y][z] != null) {
                                 var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
                                 for (BlockFace face : visibleFaces) {
-                                    addFace(face, x + startX, y, z + startZ, blocks[x][y][z]);
+                                    if (visibleFaces.contains(BlockFace.TOP)) {
+                                        addFace(face, x + startX, y, z + startZ, blocks[x][y][z], true);
+                                    } else {
+                                        addFace(face, x + startX, y, z + startZ, blocks[x][y][z], false);
+                                    }
                                 }
                             }
                         }
@@ -267,6 +297,14 @@ public class Chunk implements Entity {
                 }
 
                 mesh = new Mesh(verticesArr);
+
+                if (waterVertices.size() > 0) {
+                    var waterVerticesArr = new float[waterVertices.size()];
+                    for (int i = 0; i < waterVertices.size(); i++) {
+                        waterVerticesArr[i] = waterVertices.get(i).floatValue();
+                    }
+                    waterMesh = new Mesh(waterVerticesArr);
+                }
             }
         }
     }
