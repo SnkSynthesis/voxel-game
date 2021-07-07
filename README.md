@@ -20,4 +20,4 @@ Run `./mvnw compile exec:java`
 * `[ESC]` - Unlock mouse from window
 * `[Left Shift]` - Move down
 * `[Space]` - Move up 
-* `[T]` - Toggle Wireframe
+* `[T]` - Toggle wireframe
