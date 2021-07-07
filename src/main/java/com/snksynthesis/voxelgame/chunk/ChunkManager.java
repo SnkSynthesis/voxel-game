@@ -32,7 +32,7 @@ public class ChunkManager implements Entity {
         for (Chunk chunk : chunks) {
             if ((camPos.x < chunk.getStartPos().x || camPos.z < chunk.getStartPos().z)
                     || (camPos.x > chunk.getEndPos().x || camPos.z > chunk.getEndPos().z)) {
-                System.out.println("Out of bounds");
+                System.out.println("Outside of chunk boundaries");
             }
             chunk.update(window);
         }
