@@ -279,10 +279,8 @@ public class Chunk implements Entity {
                             if (blocks[x][y][z] != null) {
                                 var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
                                 for (BlockFace face : visibleFaces) {
-                                    if (blocks[x][y][z] == BlockType.WATER) {
-                                        if (visibleFaces.contains(BlockFace.TOP)) {
-                                            addFace(BlockFace.TOP, x + startX, y, z + startZ, blocks[x][y][z], true);
-                                        }
+                                    if (blocks[x][y][z] == BlockType.WATER && visibleFaces.contains(BlockFace.TOP)) {
+                                        addFace(BlockFace.TOP, x + startX, y, z + startZ, blocks[x][y][z], true);
                                     } else {
                                         addFace(face, x + startX, y, z + startZ, blocks[x][y][z], false);
                                     }
