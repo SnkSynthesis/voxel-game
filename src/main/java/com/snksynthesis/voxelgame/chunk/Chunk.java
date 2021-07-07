@@ -163,7 +163,7 @@ public class Chunk implements Entity {
                     vertices.add(0.3f);
                     break;
                 case FRONT:
-                    vertices.add(0.75f);
+                    vertices.add(0.65f);
                     break;
                 case LEFT:
                     vertices.add(0.8f);
