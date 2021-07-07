@@ -127,17 +127,13 @@ public class Chunk implements Entity {
 
         int i = 0;
         int j = 0;
-        boolean addedVertices = false;
         do {
             // Positions
             if (type == BlockType.WATER) {
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] * 0.4f + y);
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
-                addedVertices = true;
-            }
-
-            if (addedVertices == false) {
+            } else {
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 0] + x);
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 1] + y);
                 vertices.add(Block.CUBE_POSITIONS[face.getIndex()][i + 2] + z);
