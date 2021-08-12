@@ -84,8 +84,7 @@ public class App {
 
     private void update() {
         var camPos = cam.getPos();
-        window.setTitle("Voxel Game | FPS: " + fps + " | Pos: " + Math.round(camPos.x) + "x " + Math.round(camPos.y)
-                + "y " + Math.round(camPos.z) + "z");
+        window.setTitle(String.format("Voxel Game | FPS: %d | Pos: %dx %dy %dz", fps, (int) camPos.x, (int) camPos.y, (int) camPos.z));
         cam.update(window);
         
         chunkManager.setCamPos(camPos);

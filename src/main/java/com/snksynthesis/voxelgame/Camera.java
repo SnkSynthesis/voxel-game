@@ -26,7 +26,7 @@ public class Camera implements Entity {
     public void procInput(Window window) {
 
         // Keyboard input
-        final float SPEED = 5.0f * window.getDeltaTime();
+        final float SPEED = 10.0f * window.getDeltaTime();
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_W) == GLFW_PRESS) {
             pos.add(new Vector3f(front).mul(SPEED));
         }

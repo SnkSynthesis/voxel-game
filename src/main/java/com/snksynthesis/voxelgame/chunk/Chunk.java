@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL33.*;
 
 public class Chunk implements Entity {
 
-    public final int WIDTH = 100;
+    public final static int WIDTH = 16;
     public final int HEIGHT = 256;
 
     private final int WATER_HEIGHT = 4;
@@ -262,7 +262,7 @@ public class Chunk implements Entity {
     public void genWorld() {
         if (z < WIDTH) {
             while (x < WIDTH) {
-                float height = Noise.getNoiseHeight(x, z);
+                float height = Noise.getNoiseHeight(x + startX, z + startZ);
                 height = (float) Math.pow(height, 2.01);
                 height += 0.5;
                 height *= 5;
