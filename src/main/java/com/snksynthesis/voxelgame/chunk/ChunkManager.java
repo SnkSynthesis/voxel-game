@@ -56,8 +56,8 @@ public class ChunkManager implements Entity {
 
     private void setVisibleChunks() {
         visibleChunks.clear();
-        for (int y = camPos.y - 1; y < camPos.y + CHUNK_RENDER_DIST; y++) {
-            for (int x = camPos.x - 1; x < camPos.x + CHUNK_RENDER_DIST; x++) {
+        for (int y = camPos.y - CHUNK_RENDER_DIST; y < camPos.y + CHUNK_RENDER_DIST; y++) {
+            for (int x = camPos.x - CHUNK_RENDER_DIST; x < camPos.x + CHUNK_RENDER_DIST; x++) {
                 if (getChunk(x, y) == null) {
                     putChunk(x, y, new Chunk(x * Chunk.WIDTH, y * Chunk.WIDTH));
                 }
