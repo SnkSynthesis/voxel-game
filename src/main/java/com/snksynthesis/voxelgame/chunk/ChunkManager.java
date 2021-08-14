@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,8 +20,9 @@ import org.lwjgl.system.MemoryStack;
 
 public class ChunkManager implements Entity {
     private Map<String, Chunk> chunkMap;
-    private ArrayList<Chunk> visibleChunks;
-    private Vector2i camPos;
+    private Map<Float, Chunk> visibleChunks;
+    private Vector2i camPos; // relative to chunkMap
+    private Vector3f actualCamPos;
     private ThreadPoolExecutor executor;
     private List<Future<Chunk>> genFutures;
 
@@ -30,20 +32,21 @@ public class ChunkManager implements Entity {
         executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
         genFutures = new ArrayList<>();
         camPos = new Vector2i();
-        visibleChunks = new ArrayList<>();
+        actualCamPos = new Vector3f();
+        visibleChunks = new TreeMap<>();
         chunkMap = new HashMap<>();
     }
 
     @Override
     public void draw(Shader shader, MemoryStack stack) {
-        for (Chunk chunk : visibleChunks) {
+        for (Chunk chunk : visibleChunks.values()) {
             chunk.draw(shader, stack);
         }
     }
 
     @Override
     public void update(Window window) {
-        for (Chunk chunk : visibleChunks) {
+        for (Chunk chunk : visibleChunks.values()) {
             Future<Chunk> genFuture = executor.submit(() -> {
                 chunk.update(window);
                 return chunk;
@@ -88,12 +91,14 @@ public class ChunkManager implements Entity {
                 if (getChunk(x, y) == null) {
                     putChunk(x, y, new Chunk(x * Chunk.WIDTH, y * Chunk.WIDTH));
                 }
-                visibleChunks.add(getChunk(x, y));
+                // Make distance negative to reverse sorting
+                visibleChunks.put(-actualCamPos.distance(getChunk(x, y).getPos()), getChunk(x, y));
             }
         }
     }
 
     public void setCamPos(Vector3f camPos) {
+        actualCamPos.set(camPos);
         // camPos.z is this.camPos.y as this is 3d -> 2d
         this.camPos.set((int) (camPos.x / Chunk.WIDTH), (int) (camPos.z / Chunk.WIDTH));
         setVisibleChunks();

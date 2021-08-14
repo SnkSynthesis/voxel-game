@@ -321,6 +321,10 @@ public class Chunk implements Entity {
         return new Vector3f(startX, 0f, startZ);
     }
 
+    public Vector3f getPos() {
+        return new Vector3f(startX + WIDTH / 2f, 0f, startZ + WIDTH / 2f);
+    }
+
     public Vector3f getEndPos() {
         return new Vector3f(startX + WIDTH, 0f, startZ + WIDTH);
     }
