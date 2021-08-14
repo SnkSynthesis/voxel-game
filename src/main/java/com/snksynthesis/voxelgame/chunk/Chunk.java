@@ -44,8 +44,10 @@ public class Chunk implements Entity {
     private int blockCount = 0;
     private int waterBlockCount = 0;
     private Random rand;
+    private boolean isGenerating;
 
     public Chunk(float startX, float startZ) {
+        isGenerating = false;
         model = new Matrix4f();
         allocatedMem = MemoryUtil.memAllocFloat(16);
         tex = Texture.loadRGBA("textures/atlas.png");
@@ -272,41 +274,45 @@ public class Chunk implements Entity {
             x = 0;
             z++;
         } else {
-            if (mesh == null) {
-                for (int y = 0; y < HEIGHT; y++) {
-                    for (int x = 0; x < WIDTH; x++) {
-                        for (int z = 0; z < WIDTH; z++) {
-                            if (blocks[x][y][z] != null) {
-                                var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
-                                for (BlockFace face : visibleFaces) {
-                                    if (blocks[x][y][z] == BlockType.WATER) {
-                                        if (visibleFaces.contains(BlockFace.TOP)) {
-                                            // Show only top face for water blocks and exclude all other faces
-                                            addFace(BlockFace.TOP, x + startX, y, z + startZ, blocks[x][y][z], true);
-                                        }
-                                    } else {
-                                        addFace(face, x + startX, y, z + startZ, blocks[x][y][z], false);
+            isGenerating = true;
+        }
+    }
+
+    public void genMesh() {
+        if (mesh == null && isGenerating) {
+            for (int y = 0; y < HEIGHT; y++) {
+                for (int x = 0; x < WIDTH; x++) {
+                    for (int z = 0; z < WIDTH; z++) {
+                        if (blocks[x][y][z] != null) {
+                            var visibleFaces = getVisibleFaces(x, y, z, blocks[x][y][z]);
+                            for (BlockFace face : visibleFaces) {
+                                if (blocks[x][y][z] == BlockType.WATER) {
+                                    if (visibleFaces.contains(BlockFace.TOP)) {
+                                        // Show only top face for water blocks and exclude all other faces
+                                        addFace(BlockFace.TOP, x + startX, y, z + startZ, blocks[x][y][z], true);
                                     }
+                                } else {
+                                    addFace(face, x + startX, y, z + startZ, blocks[x][y][z], false);
                                 }
                             }
                         }
                     }
                 }
+            }
 
-                var verticesArr = new float[vertices.size()];
-                for (int i = 0; i < vertices.size(); i++) {
-                    verticesArr[i] = vertices.get(i).floatValue();
+            var verticesArr = new float[vertices.size()];
+            for (int i = 0; i < vertices.size(); i++) {
+                verticesArr[i] = vertices.get(i).floatValue();
+            }
+
+            mesh = new Mesh(verticesArr);
+
+            if (waterVertices.size() > 0) {
+                var waterVerticesArr = new float[waterVertices.size()];
+                for (int i = 0; i < waterVertices.size(); i++) {
+                    waterVerticesArr[i] = waterVertices.get(i).floatValue();
                 }
-
-                mesh = new Mesh(verticesArr);
-
-                if (waterVertices.size() > 0) {
-                    var waterVerticesArr = new float[waterVertices.size()];
-                    for (int i = 0; i < waterVertices.size(); i++) {
-                        waterVerticesArr[i] = waterVertices.get(i).floatValue();
-                    }
-                    waterMesh = new Mesh(waterVerticesArr);
-                }
+                waterMesh = new Mesh(waterVerticesArr);
             }
         }
     }

@@ -2,7 +2,12 @@ package com.snksynthesis.voxelgame.chunk;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import com.snksynthesis.voxelgame.Entity;
 import com.snksynthesis.voxelgame.gfx.Shader;
@@ -16,10 +21,14 @@ public class ChunkManager implements Entity {
     private Map<String, Chunk> chunkMap;
     private ArrayList<Chunk> visibleChunks;
     private Vector2i camPos;
+    private ThreadPoolExecutor executor;
+    private List<Future<Chunk>> genFutures;
 
-    private final int CHUNK_RENDER_DIST = 5;
+    private final int CHUNK_RENDER_DIST = 4;
 
     public ChunkManager() {
+        executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+        genFutures = new ArrayList<>();
         camPos = new Vector2i();
         visibleChunks = new ArrayList<>();
         chunkMap = new HashMap<>();
@@ -35,12 +44,30 @@ public class ChunkManager implements Entity {
     @Override
     public void update(Window window) {
         for (Chunk chunk : visibleChunks) {
-            chunk.update(window);
+            Future<Chunk> genFuture = executor.submit(() -> {
+                chunk.update(window);
+                return chunk;
+            });
+            genFutures.add(genFuture);
         }
+        for (int i = 0; i < genFutures.size(); i++) {
+            if (genFutures.get(i).isDone()) {
+                try {
+                    Chunk chunk;
+                    chunk = genFutures.get(i).get();
+                    chunk.genMesh();
+                    genFutures.remove(genFutures.get(i));
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     @Override
     public void destroy() {
+        executor.shutdown();
         for (Chunk chunk : chunkMap.values()) {
             chunk.destroy();
         }
