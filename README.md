@@ -1,18 +1,20 @@
 # voxel-game
 A simple voxel game written in Java.
 
-* Make sure you have Java 11+ installed.
+* Make sure you have Java 11+ and Git installed.
 
-## Compile & run the project
+## Clone, Compile, and Run the Project
 
-Run `./mvnw compile exec:java`
+1. `git clone https://github.com/SnkSynthesis/voxel-game`
+2. `cd voxel-game`
+3. `./mvnw compile exec:java`
 
 **OR**
 
 1. Create a JAR: `./mvnw package`
 2. `java -jar ./target/voxel-game-1.0.jar`
 
-### How to play
+## How to Play
 
 * `[W]`, `[A]`, `[S]`, `[D]` - To move around
 * `[Move Mouse]` - To look around
