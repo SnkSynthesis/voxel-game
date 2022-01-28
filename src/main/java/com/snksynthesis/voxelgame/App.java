@@ -39,7 +39,7 @@ public class App {
     }
 
     private void init() {
-        window = new Window("Voxel Game", 1920, 1200);
+        window = new Window("Voxel Game", 650, 650);
         window.create();
 
         shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
