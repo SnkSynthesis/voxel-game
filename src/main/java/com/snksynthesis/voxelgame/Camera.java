@@ -1,20 +1,24 @@
 package com.snksynthesis.voxelgame;
 
+import com.snksynthesis.voxelgame.gfx.Shader;
+import com.snksynthesis.voxelgame.gfx.Window;
+import lombok.Getter;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import com.snksynthesis.voxelgame.gfx.Shader;
-import com.snksynthesis.voxelgame.gfx.Window;
-
 public class Camera implements Entity {
 
-    private Vector3f front, pos;
+    private Vector3f front;
+    @Getter
+    private final Vector3f pos;
     private boolean firstMouse;
     private float lastX, lastY, yaw, pitch;
 
+    private static final float BASE_WALK_SPEED = 10.0f;
+    private static final float BASE_PRINT_BOOST = 7.0f;
     private static final Vector3f UP = new Vector3f(0.0f, 1.0f, 0.0f);
     private static final Vector3f DOWN = new Vector3f(0.0f, -1.0f, 0.0f);
 
@@ -26,7 +30,10 @@ public class Camera implements Entity {
     public void procInput(Window window) {
 
         // Keyboard input
-        final float SPEED = 10.0f * window.getDeltaTime();
+        float SPEED = BASE_WALK_SPEED * window.getDeltaTime();
+        if (glfwGetKey(window.getRawWindow(), GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+            SPEED = (BASE_WALK_SPEED + BASE_PRINT_BOOST) * window.getDeltaTime();
+        }
         if (glfwGetKey(window.getRawWindow(), GLFW_KEY_W) == GLFW_PRESS) {
             pos.add(new Vector3f(front).mul(SPEED));
         }
@@ -58,8 +65,8 @@ public class Camera implements Entity {
 
     public void addMouseCallback(Window window) {
 
-        lastX = window.getWidth() / 2;
-        lastY = window.getHeight() / 2;
+        lastX = window.getWidth() / 2f;
+        lastY = window.getHeight() / 2f;
         firstMouse = true;
 
         glfwSetCursorPos(window.getRawWindow(), lastX, lastY);
@@ -104,10 +111,6 @@ public class Camera implements Entity {
 
     public void setPos(float x, float y, float z) {
         pos.set(x, y, z);
-    }
-
-    public Vector3f getPos() {
-        return pos;
     }
 
     public Matrix4f getViewMat() {

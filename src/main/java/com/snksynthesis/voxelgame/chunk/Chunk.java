@@ -1,8 +1,5 @@
 package com.snksynthesis.voxelgame.chunk;
 
-import java.util.List;
-import java.util.Random;
-
 import com.snksynthesis.voxelgame.Entity;
 import com.snksynthesis.voxelgame.Noise;
 import com.snksynthesis.voxelgame.block.Block;
@@ -13,16 +10,18 @@ import com.snksynthesis.voxelgame.gfx.Shader;
 import com.snksynthesis.voxelgame.gfx.Window;
 import com.snksynthesis.voxelgame.texture.Texture;
 import com.snksynthesis.voxelgame.texture.TextureAtlas;
-
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
-import static org.lwjgl.opengl.GL33.*;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static org.lwjgl.opengl.GL33.glGetUniformLocation;
+import static org.lwjgl.opengl.GL33.glUniformMatrix4fv;
 
 public class Chunk implements Entity {
 
@@ -31,19 +30,22 @@ public class Chunk implements Entity {
 
     private final int WATER_HEIGHT = 4;
 
-    private float x, startX, z, startZ;
+    private float x;
+    private final float startX;
+    private float z;
+    private final float startZ;
 
     private Mesh mesh;
     private Mesh waterMesh;
-    private Matrix4f model;
-    private FloatBuffer allocatedMem;
-    private Texture tex;
-    private List<Float> vertices;
-    private List<Float> waterVertices;
-    private BlockType[][][] blocks;
+    private final Matrix4f model;
+    private final FloatBuffer allocatedMem;
+    private final Texture tex;
+    private final List<Float> vertices;
+    private final List<Float> waterVertices;
+    private final BlockType[][][] blocks;
     private int blockCount = 0;
     private int waterBlockCount = 0;
-    private Random rand;
+    private final Random rand;
     private boolean isGenerating;
 
     public Chunk(float startX, float startZ) {

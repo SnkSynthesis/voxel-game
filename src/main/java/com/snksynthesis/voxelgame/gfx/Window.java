@@ -2,12 +2,11 @@ package com.snksynthesis.voxelgame.gfx;
 
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
-
-import static org.lwjgl.glfw.GLFW.*;
+import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryUtil;
 
-import org.lwjgl.opengl.GL;
-import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL33.glViewport;
 
 /**
  * {@link Window} is for creating and managing a window.

@@ -1,32 +1,27 @@
 package com.snksynthesis.voxelgame.chunk;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import com.snksynthesis.voxelgame.Entity;
+import com.snksynthesis.voxelgame.gfx.Shader;
+import com.snksynthesis.voxelgame.gfx.Window;
+import org.joml.Vector2i;
+import org.joml.Vector3f;
+import org.lwjgl.system.MemoryStack;
+
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import com.snksynthesis.voxelgame.Entity;
-import com.snksynthesis.voxelgame.gfx.Shader;
-import com.snksynthesis.voxelgame.gfx.Window;
-
-import org.joml.Vector3f;
-import org.joml.Vector2i;
-import org.lwjgl.system.MemoryStack;
-
 public class ChunkManager implements Entity {
-    private Map<String, Chunk> chunkMap;
-    private Map<Float, Chunk> visibleChunks;
-    private Vector2i camPos; // relative to chunkMap
-    private Vector3f actualCamPos;
-    private ThreadPoolExecutor executor;
-    private List<Future<Chunk>> genFutures;
+    private final Map<String, Chunk> chunkMap;
+    private final Map<Float, Chunk> visibleChunks;
+    private final Vector2i camPos; // relative to chunkMap
+    private final Vector3f actualCamPos;
+    private final ThreadPoolExecutor executor;
+    private final List<Future<Chunk>> genFutures;
 
-    private final int CHUNK_RENDER_DIST = 4;
+    private final int CHUNK_RENDER_DIST = 5;
 
     public ChunkManager() {
         executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);

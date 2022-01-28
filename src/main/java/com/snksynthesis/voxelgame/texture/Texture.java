@@ -1,18 +1,19 @@
 package com.snksynthesis.voxelgame.texture;
 
-import static org.lwjgl.opengl.GL33.*;
-import static org.lwjgl.stb.STBImage.*;
 import org.lwjgl.BufferUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+
+import static org.lwjgl.opengl.GL33.*;
+import static org.lwjgl.stb.STBImage.*;
 
 /**
  * {@link Texture} is for loading and using textures
  */
 public class Texture {
 
-    private int texture;
+    private final int texture;
 
     private Texture(String path, boolean rgba) {
         texture = glGenTextures();
