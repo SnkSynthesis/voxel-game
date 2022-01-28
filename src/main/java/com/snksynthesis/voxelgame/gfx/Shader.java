@@ -1,10 +1,10 @@
 package com.snksynthesis.voxelgame.gfx;
 
-import static org.lwjgl.opengl.GL33.*;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import static org.lwjgl.opengl.GL33.*;
 
 /**
  * {@link Shader} handles shaders
@@ -14,8 +14,8 @@ public class Shader {
     private int programId;
     private int vertexId;
     private int fragId;
-    private String vertexPath;
-    private String fragPath;
+    private final String vertexPath;
+    private final String fragPath;
 
     /**
      * Initializes a Shader object
@@ -23,7 +23,7 @@ public class Shader {
      * @param fragPath path to fragment shader
      */
     public Shader(String vertexPath, String fragPath) {
-        this.vertexPath = getClass().getClassLoader().getResource(vertexPath).getPath().substring(1);;
+        this.vertexPath = getClass().getClassLoader().getResource(vertexPath).getPath().substring(1);
         this.fragPath = getClass().getClassLoader().getResource(fragPath).getPath().substring(1);
     }
 

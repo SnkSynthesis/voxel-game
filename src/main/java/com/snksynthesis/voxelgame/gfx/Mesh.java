@@ -1,8 +1,9 @@
 package com.snksynthesis.voxelgame.gfx;
 
+import org.lwjgl.system.MemoryUtil;
+
 import java.nio.FloatBuffer;
 
-import org.lwjgl.system.MemoryUtil;
 import static org.lwjgl.opengl.GL33.*;
 
 public class Mesh {
@@ -13,9 +14,9 @@ public class Mesh {
     public static int AMBIENT_VALUE_SIZE = 1;
     public static int VERTEX_SIZE = POSITION_SIZE + TEXTURE_COORD_SIZE + ALPHA_VALUE_SIZE + AMBIENT_VALUE_SIZE;
 
-    private int vaoId; // Vertex Array Object ID
-    private int vboId; // Vertex Buffer Object ID
-    private float[] vertices;
+    private final int vaoId; // Vertex Array Object ID
+    private final int vboId; // Vertex Buffer Object ID
+    private final float[] vertices;
 
     /**
      * {@link Mesh} is for initializing and drawing meshes

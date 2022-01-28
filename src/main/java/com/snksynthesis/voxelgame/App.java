@@ -1,14 +1,13 @@
 package com.snksynthesis.voxelgame;
 
+import com.snksynthesis.voxelgame.chunk.ChunkManager;
+import com.snksynthesis.voxelgame.gfx.Shader;
+import com.snksynthesis.voxelgame.gfx.Window;
+import org.joml.Matrix4f;
 import org.lwjgl.system.MemoryStack;
 
-import static org.lwjgl.opengl.GL33.*;
 import static org.lwjgl.glfw.GLFW.*;
-
-import org.joml.Matrix4f;
-
-import com.snksynthesis.voxelgame.chunk.ChunkManager;
-import com.snksynthesis.voxelgame.gfx.*;
+import static org.lwjgl.opengl.GL33.*;
 
 public class App {
 
@@ -40,7 +39,7 @@ public class App {
     }
 
     private void init() {
-        window = new Window("Voxel Game", 650, 650);
+        window = new Window("Voxel Game", 1920, 1200);
         window.create();
 
         shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
@@ -109,6 +108,7 @@ public class App {
 
             window.update();
         }
+
         destroy();
     }
 

@@ -2,7 +2,6 @@ package com.snksynthesis.voxelgame.texture;
 
 import com.snksynthesis.voxelgame.block.BlockFace;
 import com.snksynthesis.voxelgame.block.BlockType;
-
 import org.joml.Vector2f;
 
 public class TextureAtlas {
