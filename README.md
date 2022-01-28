@@ -21,5 +21,6 @@ A simple voxel game written in Java.
 * `[Q]` - Lock mouse to window
 * `[ESC]` - Unlock mouse from window
 * `[Left Shift]` - Move down
+* `[Left Control]` - Sprint (increase in movement speed)
 * `[Space]` - Move up 
 * `[T]` - Toggle wireframe
