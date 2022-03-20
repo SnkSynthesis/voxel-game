@@ -1,4 +1,5 @@
 # voxel-game
+<img src="screenshot.png" alt="Screenshot">
 A simple voxel game written in Java.
 
 * Make sure you have Java 11+ and Git installed.
