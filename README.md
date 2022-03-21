@@ -1,7 +1,7 @@
 # voxel-game
 A simple voxel game written in Java.
 
-<img src="screenshots/screenshot0.png" alt="Screenshot" width="50%" height="50%">
+<img src="screenshots/screenshot1.png" alt="Screenshot" width="50%" height="50%">
 
 ## Requirements
 * Java 11+
@@ -30,12 +30,12 @@ A simple voxel game written in Java.
 
 <details><summary>View Screenshots</summary>
   
-<img src="screenshots/screenshot1.png" alt="Screenshot" width="50%" height="50%">
-<img src="screenshots/screenshot2.png" alt="Screenshot" width="50%" height="50%">
-<img src="screenshots/screenshot3.png" alt="Screenshot" width="50%" height="50%">
-<img src="screenshots/screenshot4.png" alt="Screenshot" width="50%" height="50%">
-<img src="screenshots/screenshot5.png" alt="Screenshot" width="50%" height="50%">
-<img src="screenshots/screenshot6.png" alt="Screenshot" width="50%" height="50%">
+<img src="screenshots/screenshot1.jpg" alt="Screenshot" width="50%" height="50%">
+<img src="screenshots/screenshot2.jpg" alt="Screenshot" width="50%" height="50%">
+<img src="screenshots/screenshot3.jpg" alt="Screenshot" width="50%" height="50%">
+<img src="screenshots/screenshot4.jpg" alt="Screenshot" width="50%" height="50%">
+<img src="screenshots/screenshot5.jpg" alt="Screenshot" width="50%" height="50%">
+<img src="screenshots/screenshot6.jpg" alt="Screenshot" width="50%" height="50%">
   
 </details>
 
