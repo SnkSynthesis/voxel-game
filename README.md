@@ -1,7 +1,7 @@
 # voxel-game
 A simple voxel game written in Java.
 
-<img src="screenshots/screenshot1.png" alt="Screenshot" width="50%" height="50%">
+<img src="screenshots/screenshot0.png" alt="Screenshot" width="50%" height="50%">
 
 ## Requirements
 * Java 11+
