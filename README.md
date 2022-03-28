@@ -9,7 +9,7 @@ A simple voxel game written in Java.
 
 ## Clone, Compile, and Run the Project
 
-### Linux / macOS Systems
+### Linux / MacOS Systems
 1. `git clone https://github.com/SnkSynthesis/voxel-game`
 2. `cd voxel-game`
 3. `chmod +x mvnw `
@@ -17,6 +17,8 @@ A simple voxel game written in Java.
 5. Create a JAR (optional)
     1. `./mvnw package`
     2. `java -jar ./target/voxel-game-1.0.jar`
+
+**NOTE**: [MacOS users should pass VM option: `-XstartOnFirstThread`](https://www.lwjgl.org/guide)
 
 ### Windows Systems
 1. `git clone https://github.com/SnkSynthesis/voxel-game`
