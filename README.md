@@ -12,21 +12,19 @@ A simple voxel game written in Java.
 ### Linux / MacOS Systems
 1. `git clone https://github.com/SnkSynthesis/voxel-game`
 2. `cd voxel-game`
-3. `chmod +x mvnw `
-4. `./mvnw compile exec:java`
-5. Create a JAR (optional)
-    1. `./mvnw package`
-    2. `java -jar ./target/voxel-game-1.0.jar`
-
-**NOTE**: [MacOS users should pass VM option: `-XstartOnFirstThread`](https://www.lwjgl.org/guide)
+3. `chmod +x mvnw`
+4. * `./mvnw clean compile exec:java` (Works on Linux only)
+   * Create a JAR:
+        1. `./mvnw clean package`
+        2. `java -jar ./target/voxel-game-1.0.jar` ([MacOS users should pass VM option: `-XstartOnFirstThread`](https://www.lwjgl.org/guide))
 
 ### Windows Systems
 1. `git clone https://github.com/SnkSynthesis/voxel-game`
 2. `cd voxel-game`
-3. `mvnw compile exec:java`
-4. Create a JAR (optional)
-    1. `mvnw package`
-    2. `java -jar ./target/voxel-game-1.0.jar`
+3.  * `mvnw compile exec:java`
+    * Create a JAR:
+         1. `mvnw clean package`
+         2. `java -jar ./target/voxel-game-1.0.jar`
 
 ## Screenshots
 
