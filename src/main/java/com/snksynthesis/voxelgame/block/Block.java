@@ -1,13 +1,16 @@
 package com.snksynthesis.voxelgame.block;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class Block {
 
-    @Getter
     private final BlockType type;
+
+    public Block(BlockType type) {
+        this.type = type;
+    }
+
+    public BlockType getType() {
+        return type;
+    }
 
     // @formatter:off
     /**

@@ -1,9 +1,7 @@
 package com.snksynthesis.voxelgame;
 
-import lombok.experimental.UtilityClass;
 import org.joml.SimplexNoise;
 
-@UtilityClass
 public class Noise {
     public static float getNoiseHeight(float x, float z) {
         float nx = x / 200 + 0.5f;

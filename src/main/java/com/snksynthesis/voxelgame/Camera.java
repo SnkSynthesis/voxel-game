@@ -2,7 +2,6 @@ package com.snksynthesis.voxelgame;
 
 import com.snksynthesis.voxelgame.gfx.Shader;
 import com.snksynthesis.voxelgame.gfx.Window;
-import lombok.Getter;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryStack;
@@ -12,7 +11,6 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Camera implements Entity {
 
     private Vector3f front;
-    @Getter
     private final Vector3f pos;
     private boolean firstMouse;
     private float lastX, lastY, yaw, pitch;
@@ -111,6 +109,10 @@ public class Camera implements Entity {
 
     public void setPos(float x, float y, float z) {
         pos.set(x, y, z);
+    }
+
+    public Vector3f getPos() {
+        return pos;
     }
 
     public Matrix4f getViewMat() {

@@ -6,7 +6,7 @@ import org.joml.Vector2f;
 
 public class TextureAtlas {
 
-    private static final float IMG_WIDTH_PX = 128.0f;
+    public static final float IMG_WIDTH_PX = 128.0f;
     private static final float TEX_WIDTH_PX = 32.0f;
     private static final float TEX_WIDTH = TEX_WIDTH_PX / IMG_WIDTH_PX;
 

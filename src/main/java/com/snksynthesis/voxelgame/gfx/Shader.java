@@ -1,7 +1,6 @@
 package com.snksynthesis.voxelgame.gfx;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Scanner;
 
 import static org.lwjgl.opengl.GL33.*;
@@ -14,8 +13,8 @@ public class Shader {
     private int programId;
     private int vertexId;
     private int fragId;
-    private final String vertexPath;
-    private final String fragPath;
+    private final InputStream vertexPath;
+    private final InputStream fragPath;
 
     /**
      * Initializes a Shader object
@@ -23,8 +22,8 @@ public class Shader {
      * @param fragPath path to fragment shader
      */
     public Shader(String vertexPath, String fragPath) {
-        this.vertexPath = getClass().getClassLoader().getResource(vertexPath).getPath().substring(1);
-        this.fragPath = getClass().getClassLoader().getResource(fragPath).getPath().substring(1);
+        this.vertexPath = getClass().getClassLoader().getResourceAsStream(vertexPath);
+        this.fragPath = getClass().getClassLoader().getResourceAsStream(fragPath);
     }
 
     /**
@@ -76,8 +75,8 @@ public class Shader {
         }
     }
 
-    private int createShader(String path, int shaderType) throws Exception {
-        String code = readFile(path);
+    private int createShader(InputStream input, int shaderType) throws Exception {
+        String code = readFile(input);
         int shaderId = glCreateShader(shaderType);
         if (shaderId == 0) {
             throw new Exception("Error creating shader: " + glGetShaderInfoLog(shaderId));
@@ -94,16 +93,13 @@ public class Shader {
         return shaderId;
     }
 
-    private String readFile(String path) {
-        File file = new File(path);
+    private String readFile(InputStream input) {
         StringBuilder sb = new StringBuilder();
-        try (Scanner sc = new Scanner(file);) {
+        try (Scanner sc = new Scanner(input)) {
             while (sc.hasNextLine()) {
                 sb.append(sc.nextLine());
                 sb.append(System.lineSeparator());
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         }
 
         return sb.toString();
