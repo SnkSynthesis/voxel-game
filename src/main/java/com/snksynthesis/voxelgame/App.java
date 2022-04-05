@@ -43,11 +43,6 @@ public class App {
         window.create();
 
         shader = new Shader("shaders/vertex.glsl", "shaders/fragment.glsl");
-        try {
-            shader.link();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         chunkManager = new ChunkManager();
 
@@ -88,6 +83,16 @@ public class App {
         
         chunkManager.setCamPos(camPos);
         chunkManager.update(window);
+
+        // Link after vertex array is bound
+        if (!shader.isLinked()) {
+            try {
+                shader.link();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         calcFps();
     }
 

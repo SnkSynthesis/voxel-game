@@ -15,6 +15,7 @@ public class Shader {
     private int fragId;
     private final InputStream vertexPath;
     private final InputStream fragPath;
+    private boolean linked = false;
 
     /**
      * Initializes a Shader object
@@ -33,7 +34,7 @@ public class Shader {
      *                   shaders
      */
     public void link() throws Exception {
-
+        linked = true;
         programId = glCreateProgram();
         if (programId == 0) {
             throw new Exception("Unable to create shader program!");
@@ -103,6 +104,10 @@ public class Shader {
         }
 
         return sb.toString();
+    }
+
+    public boolean isLinked() {
+        return linked;
     }
 
     public int getProgramId() {
